@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -32,6 +33,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="12dp"
+        android:layout_marginHorizontal="8dp"
         android:layout_marginTop="10dp"
         android:background="#1F1F1F"
         android:elevation="4dp">
@@ -72,8 +74,15 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="8dp"
-        android:layout_marginTop="1dp" />
+        android:clipToPadding="false"
+        android:paddingTop="1dp"
+        android:scrollbars="vertical"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"/>
 
     <Button
         android:id="@+id/btnBuscarLibro"
@@ -82,46 +91,48 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="8dp"
         android:backgroundTint="@color/material_dynamic_primary50" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="54dp"
         android:orientation="horizontal"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="0dp"
         android:layout_marginHorizontal="8dp"
         android:layout_marginBottom="8dp">
 
         <Button
             android:id="@+id/btnLibrosNoLeidos"
+            android:text="No Leídos"
             android:textColor="@color/white"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="No Leídos"
+            android:paddingVertical="2dp"
             android:layout_marginEnd="2dp"
             android:backgroundTint="@color/material_dynamic_primary60" />
 
         <Button
             android:id="@+id/btnLibrosPrestados"
+            android:text="Prestados"
             android:textColor="@color/white"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Prestados"
+            android:paddingHorizontal="1dp"
             android:layout_marginHorizontal="2dp"
             android:backgroundTint="@color/material_dynamic_primary60" />
 
         <Button
             android:id="@+id/btnLibrosPorComprar"
+            android:text="Por Comprar"
             android:textColor="@color/white"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Por Comprar"
+            android:paddingVertical="2dp"
+            android:layout_marginStart="2dp"
             android:backgroundTint="@color/material_dynamic_primary60" />
 
     </LinearLayout>
