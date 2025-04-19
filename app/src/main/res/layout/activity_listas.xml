@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/black">
+
+    <TextView
+        android:id="@+id/tv_Listas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Listas"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:layout_marginTop="32dp" />
+
+    <TextView
+        android:id="@+id/tv_tituloLista"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nombre lista"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:layout_marginTop="4dp" />
+
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:layout_marginTop="10dp"
+        android:background="#1F1F1F"
+        android:elevation="4dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.45"
+            android:paddingStart="8dp"
+            android:text="TÍTULO"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.35"
+            android:paddingStart="8dp"
+            android:text="AUTOR"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.20"
+            android:paddingStart="8dp"
+            android:text="AÑO"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvLibrosLista"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:layout_marginTop="1dp" />
+
+    <Button
+        android:id="@+id/btnBuscarLibro"
+        android:text="Buscar Libro"
+        android:textColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="0dp"
+        android:backgroundTint="@color/material_dynamic_primary50" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="2dp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginBottom="8dp">
+
+        <Button
+            android:id="@+id/btnLibrosNoLeidos"
+            android:textColor="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="No Leídos"
+            android:layout_marginEnd="2dp"
+            android:backgroundTint="@color/material_dynamic_primary60" />
+
+        <Button
+            android:id="@+id/btnLibrosPrestados"
+            android:textColor="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:layout_weight="1"
+            android:text="Prestados"
+            android:layout_marginHorizontal="2dp"
+            android:backgroundTint="@color/material_dynamic_primary60" />
+
+        <Button
+            android:id="@+id/btnLibrosPorComprar"
+            android:textColor="@color/white"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_weight="1"
+            android:text="Por Comprar"
+            android:backgroundTint="@color/material_dynamic_primary60" />
+
+    </LinearLayout>
+</LinearLayout>

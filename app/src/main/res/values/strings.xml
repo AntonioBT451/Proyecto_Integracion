@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Biblioteca02</string>
+
+    <string name="vista_previa_desc">Vista previa de la imagen capturada</string>
+    <string name="capturar_imagen">Capturar Imagen</string>
+    <string name="confirmar_imagen">Confirmar Imagen</string>
+    <string name="error_permisos_camara">Se necesitan permisos de cámara</string>
+    <string name="error_opencv">Error al inicializar OpenCV</string>
+    <string name="error_no_camara">No se encontró una cámara</string>
+    <string name="error_captura">Error al capturar la imagen</string>
+    <string name="procesando">Procesando imagen...</string>
+
+    <string name="texto_extraido_placeholder">El texto extraído aparecerá aquí</string>
+    <string name="procesando_imagen">Procesando imagen...</string>
+    <string name="error_no_imagen">No se ha recibido una imagen.</string>
+    <string name="error_procesamiento">Error al procesar la imagen</string>
+</resources>
