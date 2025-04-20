@@ -23,6 +23,10 @@ public class ConsultorAPIs {
         void onLibroEncontrado(Libro libro);
     }
 
+    public interface OpenLibraryCallback {
+        void onOpenLibraryComplete(Libro libro);
+    }
+
     public Libro buscarLibro(String consulta, Boolean isISBN, MostrarInfoActivity mostrarInfoActivity, LibroBusquedaCallback callback) {
         solicitud = Volley.newRequestQueue(mostrarInfoActivity);
 
@@ -69,8 +73,14 @@ public class ConsultorAPIs {
                             }
                         }
 
-                        libroSeleccionado = busquedaOpenLibrary();
-                        callback.onLibroEncontrado(libroSeleccionado);
+                        //libroSeleccionado = busquedaOpenLibrary();
+                        //callback.onLibroEncontrado(libroSeleccionado);
+
+                        // Modified to use callback
+                        busquedaOpenLibrary(libro -> {
+                            libroSeleccionado = libro;
+                            callback.onLibroEncontrado(libroSeleccionado);
+                        });
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -123,10 +133,13 @@ public class ConsultorAPIs {
         solicitud.add(googleRequest);
     }
 
-    private Libro busquedaOpenLibrary() {
+    //private Libro busquedaOpenLibrary() {
+        private void busquedaOpenLibrary(OpenLibraryCallback callback) {
         if (libroSeleccionado == null) {
-            Log.d("OpenLibrary", "Libro no encontrado con GoogleBooks.");
-            return null;
+            //Log.d("OpenLibrary", "Libro no encontrado con GoogleBooks.");
+            //return null;
+            callback.onOpenLibraryComplete(null);
+            return;
         }
 
         String url = "https://openlibrary.org/search.json?q=" + Uri.encode(libroSeleccionado.getTitulo() + " ") + Uri.encode(libroSeleccionado.getAutores()) + "&fields=title,author_name,first_publish_year,number_of_pages_median";
@@ -138,8 +151,9 @@ public class ConsultorAPIs {
                         JSONArray docs = response.getJSONArray("docs");
 
                         if (docs.length() == 0) {
-                            mostrarLibroEncontrado();
+                            //mostrarLibroEncontrado();
                             Log.d("OpenLibrary", "No se encontro el libro para el término de búsqueda en Open Library.");
+                            callback.onOpenLibraryComplete(libroSeleccionado);
                             return;
                         }
 
@@ -162,17 +176,20 @@ public class ConsultorAPIs {
                                 break;
                             }
                         }
-                        mostrarLibroEncontrado();
+                        //mostrarLibroEncontrado();
+                        callback.onOpenLibraryComplete(libroSeleccionado);
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        callback.onOpenLibraryComplete(libroSeleccionado);
                     }
                 },
                 error -> {
                     Log.e("Open Library Error", error.getMessage());
+                    callback.onOpenLibraryComplete(libroSeleccionado);
                 }
         );
         solicitud.add(openLibraryRequest);
-        return libroSeleccionado;
+        //return libroSeleccionado;
     }
 
     private void mostrarLibroEncontrado() {
