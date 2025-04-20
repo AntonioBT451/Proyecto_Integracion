@@ -86,7 +86,7 @@ public class ConsultorAPIs {
                             }
                         }
 
-
+<<<<<<< HEAD
                         //libroSeleccionado = busquedaOpenLibrary();
                         //callback.onLibroEncontrado(libroSeleccionado);
 
@@ -118,7 +118,11 @@ public class ConsultorAPIs {
                         if (items == null) {
                             Log.d("GoogleBooks URL", "No se encontro el libro para el término de búsqueda.");
                             return;
-
+=======
+                        // Only proceed to OpenLibrary if we have a good match
+                        if (mejorSimilitud > 0.6) {
+                            libroSeleccionado = busquedaOpenLibrary();
+>>>>>>> main
                         }
 
                         /*
@@ -148,7 +152,7 @@ public class ConsultorAPIs {
         solicitud.add(googleRequest);
 }
 
-
+<<<<<<< HEAD
     //private Libro busquedaOpenLibrary() {
         private void busquedaOpenLibrary(OpenLibraryCallback callback) {
         if (libroSeleccionado == null) {
@@ -157,14 +161,18 @@ public class ConsultorAPIs {
             callback.onOpenLibraryComplete(null);
             return;
         }
-
+=======
+public void busquedaGoogleBooksISBN(String consulta, LibroBusquedaCallback callback) {
+    String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + Uri.encode(consulta) + "&projection=lite&key=AIzaSyDL4o-4r9eeDOcY2XjtuMQX74TpWaoOqVs";
+    Log.d("GoogleBooks URL", url);
+>>>>>>> main
 
     JsonObjectRequest googleRequest = new JsonObjectRequest(Request.Method.GET, url, null,
             response -> {
                 try {
                     JSONArray items = response.has("items") ? response.getJSONArray("items") : null;
 
-
+<<<<<<< HEAD
         JsonObjectRequest openLibraryRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     try {
@@ -210,7 +218,44 @@ public class ConsultorAPIs {
         );
         solicitud.add(openLibraryRequest);
         //return libroSeleccionado;
+=======
+                    if (items == null) {
+                        Log.d("GoogleBooks URL", "No se encontro el libro para el término de búsqueda.");
+                        return;
+                    }
 
+                    for (int i = 0; i < items.length(); i++) {
+                        JSONObject libro = items.getJSONObject(i).getJSONObject("volumeInfo");
+                        String titulo = libro.optString("title", "No disponible");
+                        String autores = libro.has("authors") ? libro.getJSONArray("authors").join(", ").replaceAll("\"", "") : "No disponible";
+                        String fechaPublicacion = libro.optString("publishedDate", "No disponible");
+                        String categoria = libro.has("categories") ? libro.getJSONArray("categories").join(", ").replaceAll("\"", "") : "No disponible";
+                        String numeroPaginas = libro.optString("pageCount", "No disponible");
+                        String descripcion = libro.optString("description", "No disponible");
+
+                        Libro libroGoogleBooks = new Libro(titulo, autores, fechaPublicacion, categoria, numeroPaginas, descripcion);
+                        libroSeleccionado = libroGoogleBooks;
+
+                        Log.d("GoogleBooks libro", "Libro seleccionado de Google Book mediante ISBN\n" + libroSeleccionado.infoLibro());
+                    }
+
+                    busquedaGoogleBooks(libroSeleccionado.getTitulo() + " " + libroSeleccionado.getAutores(), callback);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            },
+            error -> {
+                Log.e("GoogleBooks Error", error.getMessage());
+            }
+    );
+    solicitud.add(googleRequest);
+}
+
+private Libro busquedaOpenLibrary() {
+    if (libroSeleccionado == null) {
+        Log.d("OpenLibrary", "Libro no encontrado con GoogleBooks.");
+        return null;
+>>>>>>> main
     }
 
     String url = "https://openlibrary.org/search.json?q=" + Uri.encode(libroSeleccionado.getTitulo() + " ") + Uri.encode(libroSeleccionado.getAutores()) + "&fields=title,author_name,first_publish_year,number_of_pages_median";
