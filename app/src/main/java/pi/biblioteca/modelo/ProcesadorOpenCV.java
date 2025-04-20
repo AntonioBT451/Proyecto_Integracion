@@ -28,7 +28,8 @@ public class ProcesadorOpenCV {
             Imgproc.GaussianBlur(matImagen, matImagen, new Size(5, 5), 0);
 
             // Se aplica umbralización dinámica
-            Mat binarizada = aplicarUmbralizacion(matImagen);
+            //Mat binarizada = aplicarUmbralizacion(matImagen);
+            Mat binarizada = matImagen;
 
             // Se convierte la imagen procesada de nuevo a Bitmap
             Bitmap bitmapProcesado = Bitmap.createBitmap(binarizada.cols(), binarizada.rows(), Bitmap.Config.ARGB_8888);
