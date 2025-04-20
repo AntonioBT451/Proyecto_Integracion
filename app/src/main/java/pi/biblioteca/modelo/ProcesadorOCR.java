@@ -46,7 +46,7 @@ public class ProcesadorOCR {
                                 Log.d("ProcesadorOCR", "Línea: " + lineText);
                             }
                         }
-/*
+
                         // Después de obtener el texto, se pasa a la corrección ortográfica
                         CorrectorOrtografico correctorOrtografico = new CorrectorOrtografico();
                         correctorOrtografico.corregirTexto(textoResultante.toString().toLowerCase(), new CorrectorOrtografico.CorrectorCallback() {
@@ -64,9 +64,6 @@ public class ProcesadorOCR {
                         });
 
                         Log.d("ProcesadorOCR", "Procesamiento de texto (OCR y ortografico) completado exitosamente");
- */
-                        callback.onTextoDetectado(textoResultante.toString());
-                        Log.d("ProcesadorOCR", "Texto detectado: " + textoResultante);
                     })
                     .addOnFailureListener(e -> {
                         Log.e("ProcesadorOCR", "Error al reconocer texto", e);

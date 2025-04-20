@@ -59,7 +59,7 @@ public class BuscarLibroActivity extends AppCompatActivity
             public void onClick(View v) {
                 String query = etBuscar.getText().toString().trim();
                 if(query.isEmpty()) {
-                    mostrarMensaje("Ingrese un título o autor a buscar");
+                    mostrarMensaje("Ingrese un título o autor para buscar");
                     return;
                 }
                 presentador.buscarLibros(query);
