@@ -80,8 +80,9 @@ public class ConsultorAPIs {
                                 mejorSimilitud = similitudCombinada;
                                 libroSeleccionado = libroGoogleBooks;
 
-                                Log.d("GoogleBooks libro", "Libro seleccionado de Google Book\n" + libroSeleccionado.infoLibro());
-                                Log.d("GoogleBooks libro", "Coincidencia: " + libroGoogleBooks.getSimilitudPuntaje());
+                                Log.d("GoogleBooks libro", String.format(
+                                        "Libro encontrado:\nTítulo: %s (Similitud: %.2f)\nAutor: %s (Similitud: %.2f)\nSimilitud Total: %.2f",
+                                        titulo, similitudTitulo, autores, similitudAutor, similitudCombinada));
                             }
                         }
 
@@ -89,10 +90,13 @@ public class ConsultorAPIs {
                         //callback.onLibroEncontrado(libroSeleccionado);
 
                         // Modified to use callback
-                        busquedaOpenLibrary(libro -> {
-                            libroSeleccionado = libro;
-                            callback.onLibroEncontrado(libroSeleccionado);
-                        });
+                        if (mejorSimilitud > 0.6) {
+
+                            busquedaOpenLibrary(libro -> {
+                                libroSeleccionado = libro;
+                                callback.onLibroEncontrado(libroSeleccionado);
+                            });
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
