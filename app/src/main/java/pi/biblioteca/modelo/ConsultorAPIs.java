@@ -62,10 +62,22 @@ public class ConsultorAPIs {
                             String descripcion = libro.optString("description", "No disponible");
 
                             Libro libroGoogleBooks = new Libro(titulo, autores, fechaPublicacion, categoria, numeroPaginas, descripcion);
-                            libroGoogleBooks.setSimilitudPuntaje(libroGoogleBooks.calcularSimilitud(consulta, titulo + " " + autores));
 
-                            if (libroGoogleBooks.getSimilitudPuntaje() > mejorSimilitud && !descripcion.contains("No disponible")) {
-                                mejorSimilitud = libroGoogleBooks.getSimilitudPuntaje();
+                            // Calculate separate similarities for title and author
+                            double similitudTitulo = libroGoogleBooks.calcularSimilitud(consulta, titulo);
+                            double similitudAutor = autores.equals("No disponible") ? 0 :
+                                    libroGoogleBooks.calcularSimilitud(consulta, autores);
+
+                            // Combined similarity score with higher weight on title
+                            double similitudCombinada = (similitudTitulo * 0.7) + (similitudAutor * 0.3);
+                            libroGoogleBooks.setSimilitudPuntaje(similitudCombinada);
+
+                            // Increased threshold and added more conditions
+                            if (similitudCombinada > mejorSimilitud &&
+                                    similitudTitulo > 0.6 && // Minimum title similarity
+                                    !descripcion.equals("No disponible")) {
+
+                                mejorSimilitud = similitudCombinada;
                                 libroSeleccionado = libroGoogleBooks;
 
                                 Log.d("GoogleBooks libro", "Libro seleccionado de Google Book\n" + libroSeleccionado.infoLibro());

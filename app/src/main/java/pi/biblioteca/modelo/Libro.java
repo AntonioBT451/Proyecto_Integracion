@@ -103,7 +103,29 @@ public class Libro {
     }
 
     public double calcularSimilitud(String query, String text) {
+        if (query == null || text == null) {
+            return 0.0;
+        }
+
+        // Clean and normalize strings
+        query = query.toLowerCase().trim();
+        text = text.toLowerCase().trim();
+
+        // Split into words and find best matching segments
+        String[] queryWords = query.split("\\s+");
+        String[] textWords = text.split("\\s+");
+
+        double maxSimilarity = 0.0;
         JaroWinklerSimilarity calculadorSimilitud = new JaroWinklerSimilarity();
-        return calculadorSimilitud.apply(query.toLowerCase(), text.toLowerCase());
-    }
+        // Compare each possible segment of text with query
+        for (int i = 0; i < textWords.length; i++) {
+            StringBuilder segment = new StringBuilder();
+            for (int j = i; j < Math.min(i + queryWords.length + 1, textWords.length); j++) {
+                segment.append(textWords[j]).append(" ");
+                double similarity = calculadorSimilitud.apply(query, segment.toString().trim());
+                maxSimilarity = Math.max(maxSimilarity, similarity);
+            }
+        }
+
+        return maxSimilarity;    }
 }
