@@ -127,5 +127,6 @@ public class Libro {
             }
         }
 
-        return maxSimilarity;    }
+        return maxSimilarity;
+    }
 }

@@ -29,10 +29,11 @@ public class ConsultorAPIs {
 
     public Libro buscarLibro(String consulta, Boolean isISBN, MostrarInfoActivity mostrarInfoActivity, LibroBusquedaCallback callback) {
         solicitud = Volley.newRequestQueue(mostrarInfoActivity);
+        libroSeleccionado = null;
 
-        if(isISBN){
+        if (isISBN) {
             busquedaGoogleBooksISBN(consulta, callback);
-        }else{
+        } else {
             busquedaGoogleBooks(consulta, callback);
         }
         return libroSeleccionado;
@@ -74,7 +75,7 @@ public class ConsultorAPIs {
 
                             // Increased threshold and added more conditions
                             if (similitudCombinada > mejorSimilitud &&
-                                    similitudTitulo > 0.6 && // Minimum title similarity
+                                    similitudTitulo > 0.7 && // Minimum title similarity
                                     !descripcion.equals("No disponible")) {
 
                                 mejorSimilitud = similitudCombinada;
@@ -83,6 +84,7 @@ public class ConsultorAPIs {
                                 Log.d("GoogleBooks libro", String.format(
                                         "Libro encontrado:\nTítulo: %s (Similitud: %.2f)\nAutor: %s (Similitud: %.2f)\nSimilitud Total: %.2f",
                                         titulo, similitudTitulo, autores, similitudAutor, similitudCombinada));
+                                Log.d("GoogleBooks libro", "Info libro seleccionado:\n " + libroGoogleBooks.infoLibro());
                             }
                         }
 
@@ -90,7 +92,7 @@ public class ConsultorAPIs {
                         //callback.onLibroEncontrado(libroSeleccionado);
 
                         // Modified to use callback
-                        if (mejorSimilitud > 0.6) {
+                        if (mejorSimilitud > 0.7) {
 
                             busquedaOpenLibrary(libro -> {
                                 libroSeleccionado = libro;
@@ -150,7 +152,7 @@ public class ConsultorAPIs {
     }
 
     //private Libro busquedaOpenLibrary() {
-        private void busquedaOpenLibrary(OpenLibraryCallback callback) {
+    private void busquedaOpenLibrary(OpenLibraryCallback callback) {
         if (libroSeleccionado == null) {
             //Log.d("OpenLibrary", "Libro no encontrado con GoogleBooks.");
             //return null;
@@ -184,7 +186,7 @@ public class ConsultorAPIs {
 
                             Libro libroOpenLibrary = new Libro(titulo, autores, fechaPublicacion, categoria, numeroPaginas, descripcion);
 
-                            if (libroOpenLibrary.calcularSimilitud(libroSeleccionado.getTitulo(), titulo) > 0.80 && libroOpenLibrary.calcularSimilitud(libroSeleccionado.getAutores(), autores) > 0.50) {
+                            if (libroOpenLibrary.calcularSimilitud(libroSeleccionado.getTitulo(), titulo) > 0.80 && libroOpenLibrary.calcularSimilitud(libroSeleccionado.getAutores(), autores) > 0.60) {
                                 libroSeleccionado.setFechaPublicacion(fechaPublicacion);
                                 libroSeleccionado.setNumeroPaginas(numeroPaginas);
 
