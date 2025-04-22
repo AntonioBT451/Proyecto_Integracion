@@ -46,10 +46,18 @@ public class ConsultorAPIs {
         JsonObjectRequest googleRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     try {
-                        JSONArray items = response.getJSONArray("items");
+                        mejorSimilitud = 0.0;
+                        Boolean mejorSimilitudExist = false;
 
-                        if (items.length() == 0) {
-                            Log.d("GoogleBooks URL", "No se encontro el libro para el término de búsqueda.");
+                        int totalItems = response.getInt("totalItems");
+                        if(totalItems == 0){
+                            Log.d("GoogleBooks URL", "No se encontraron libros para el término de búsqueda (totalItems == 0).");
+                            return;
+                        }
+
+                        JSONArray items = response.getJSONArray("items");
+                        if(items.length() == 0){
+                            Log.d("GoogleBooks URL", "No se encontraron libros para el término de búsqueda (items.length() == 0).");
                             return;
                         }
 
@@ -75,29 +83,32 @@ public class ConsultorAPIs {
 
                             // Increased threshold and added more conditions
                             if (similitudCombinada > mejorSimilitud &&
-                                    similitudTitulo > 0.7 && // Minimum title similarity
-                                    !descripcion.equals("No disponible")) {
+                                    similitudCombinada > 0.6) {
 
                                 mejorSimilitud = similitudCombinada;
+                                mejorSimilitudExist = true;
                                 libroSeleccionado = libroGoogleBooks;
 
                                 Log.d("GoogleBooks libro", String.format(
-                                        "Libro encontrado:\nTítulo: %s (Similitud: %.2f)\nAutor: %s (Similitud: %.2f)\nSimilitud Total: %.2f",
+                                        "Libro encontrado:\nTítulo: %s (Similitud: %.2f)\nAutor: %s (Similitud: %.2f)\nSimilitud Total: %f",
                                         titulo, similitudTitulo, autores, similitudAutor, similitudCombinada));
-                                Log.d("GoogleBooks libro", "Info libro seleccionado:\n " + libroGoogleBooks.infoLibro());
+                            } else if (i < items.length() && !mejorSimilitudExist){
+                                Log.d("GoogleBooks libro", "No se encontraron libros con una similitud mayor a la establecida.");
+                                return;
                             }
+
                         }
 
                         //libroSeleccionado = busquedaOpenLibrary();
                         //callback.onLibroEncontrado(libroSeleccionado);
 
                         // Modified to use callback
-                        if (mejorSimilitud > 0.7) {
+                        if (mejorSimilitud > 0.6) {
 
                             busquedaOpenLibrary(libro -> {
                                 libroSeleccionado = libro;
                                 callback.onLibroEncontrado(libroSeleccionado);
-                            });
+                            }, false);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -117,8 +128,13 @@ public class ConsultorAPIs {
         JsonObjectRequest googleRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     try {
+                        int totalItems = response.getInt("totalItems");
+                        if(totalItems == 0){
+                            Log.d("GoogleBooks URL", "No se encontraron libros para el término de búsqueda (totalItems == 0).");
+                            return;
+                        }
+                        
                         JSONArray items = response.has("items") ? response.getJSONArray("items") : null;
-
                         if (items == null) {
                             Log.d("GoogleBooks URL", "No se encontro el libro para el término de búsqueda.");
                             return;
@@ -139,7 +155,12 @@ public class ConsultorAPIs {
                             Log.d("GoogleBooks libro", "Libro seleccionado de Google Book\n" + libroSeleccionado.infoLibro());
                         }
 
-                        busquedaGoogleBooks(libroSeleccionado.getTitulo() + " " + libroSeleccionado.getAutores(), callback);
+                        //busquedaGoogleBooks(libroSeleccionado.getTitulo() + " " + libroSeleccionado.getAutores(), callback);
+
+                        busquedaOpenLibrary(libro -> {
+                            libroSeleccionado = libro;
+                            callback.onLibroEncontrado(libroSeleccionado);
+                        }, true);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -152,7 +173,7 @@ public class ConsultorAPIs {
     }
 
     //private Libro busquedaOpenLibrary() {
-    private void busquedaOpenLibrary(OpenLibraryCallback callback) {
+    private void busquedaOpenLibrary(OpenLibraryCallback callback, Boolean isbn) {
         if (libroSeleccionado == null) {
             //Log.d("OpenLibrary", "Libro no encontrado con GoogleBooks.");
             //return null;
@@ -160,8 +181,17 @@ public class ConsultorAPIs {
             return;
         }
 
-        String url = "https://openlibrary.org/search.json?q=" + Uri.encode(libroSeleccionado.getTitulo() + " ") + Uri.encode(libroSeleccionado.getAutores()) + "&fields=title,author_name,first_publish_year,number_of_pages_median";
-        Log.d("URL OpenLibrary: ", url);
+        String url = null;
+
+        if (isbn) {
+            //url = "https://openlibrary.org/isbn/" + Uri.encode(libroSeleccionado.getIsbn() + " ") + "&fields=title,author_name,first_publish_year,number_of_pages_median.json";
+            url = "https://openlibrary.org/search.json?q=" + Uri.encode(libroSeleccionado.getTitulo() + " ") + Uri.encode(libroSeleccionado.getAutores()) + "&fields=title,author_name,first_publish_year,number_of_pages_median";
+            Log.d("URL OpenLibrary: ", url);
+        } else {
+            url = "https://openlibrary.org/search.json?q=" + Uri.encode(libroSeleccionado.getTitulo() + " ") + Uri.encode(libroSeleccionado.getAutores()) + "&fields=title,author_name,first_publish_year,number_of_pages_median";
+            Log.d("URL OpenLibrary: ", url);
+        }
+
 
         JsonObjectRequest openLibraryRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
