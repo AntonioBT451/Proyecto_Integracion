@@ -12,6 +12,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pi.biblioteca.vista.MostrarInfoActivity;
 
 public class ConsultorAPIs {
@@ -50,13 +53,13 @@ public class ConsultorAPIs {
                         Boolean mejorSimilitudExist = false;
 
                         int totalItems = response.getInt("totalItems");
-                        if(totalItems == 0){
+                        if (totalItems == 0) {
                             Log.d("GoogleBooks URL", "No se encontraron libros para el término de búsqueda (totalItems == 0).");
                             return;
                         }
 
                         JSONArray items = response.getJSONArray("items");
-                        if(items.length() == 0){
+                        if (items.length() == 0) {
                             Log.d("GoogleBooks URL", "No se encontraron libros para el término de búsqueda (items.length() == 0).");
                             return;
                         }
@@ -92,7 +95,7 @@ public class ConsultorAPIs {
                                 Log.d("GoogleBooks libro", String.format(
                                         "Libro encontrado:\nTítulo: %s (Similitud: %.2f)\nAutor: %s (Similitud: %.2f)\nSimilitud Total: %f",
                                         titulo, similitudTitulo, autores, similitudAutor, similitudCombinada));
-                            } else if (i < items.length() && !mejorSimilitudExist){
+                            } else if (i < items.length() && !mejorSimilitudExist) {
                                 Log.d("GoogleBooks libro", "No se encontraron libros con una similitud mayor a la establecida.");
                                 return;
                             }
@@ -108,7 +111,7 @@ public class ConsultorAPIs {
                             busquedaOpenLibrary(libro -> {
                                 libroSeleccionado = libro;
                                 callback.onLibroEncontrado(libroSeleccionado);
-                            }, false);
+                            });
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -129,11 +132,11 @@ public class ConsultorAPIs {
                 response -> {
                     try {
                         int totalItems = response.getInt("totalItems");
-                        if(totalItems == 0){
+                        if (totalItems == 0) {
                             Log.d("GoogleBooks URL", "No se encontraron libros para el término de búsqueda (totalItems == 0).");
                             return;
                         }
-                        
+
                         JSONArray items = response.has("items") ? response.getJSONArray("items") : null;
                         if (items == null) {
                             Log.d("GoogleBooks URL", "No se encontro el libro para el término de búsqueda.");
@@ -157,10 +160,10 @@ public class ConsultorAPIs {
 
                         //busquedaGoogleBooks(libroSeleccionado.getTitulo() + " " + libroSeleccionado.getAutores(), callback);
 
-                        busquedaOpenLibrary(libro -> {
+                        busquedaOpenLibraryISBN(consulta, libro -> {
                             libroSeleccionado = libro;
                             callback.onLibroEncontrado(libroSeleccionado);
-                        }, true);
+                        });
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -172,26 +175,15 @@ public class ConsultorAPIs {
         solicitud.add(googleRequest);
     }
 
-    //private Libro busquedaOpenLibrary() {
-    private void busquedaOpenLibrary(OpenLibraryCallback callback, Boolean isbn) {
+    private void busquedaOpenLibrary(OpenLibraryCallback callback) {
         if (libroSeleccionado == null) {
-            //Log.d("OpenLibrary", "Libro no encontrado con GoogleBooks.");
-            //return null;
+            Log.d("OpenLibrary", "Libro no encontrado con GoogleBooks.");
             callback.onOpenLibraryComplete(null);
             return;
         }
 
-        String url = null;
-
-        if (isbn) {
-            //url = "https://openlibrary.org/isbn/" + Uri.encode(libroSeleccionado.getIsbn() + " ") + "&fields=title,author_name,first_publish_year,number_of_pages_median.json";
-            url = "https://openlibrary.org/search.json?q=" + Uri.encode(libroSeleccionado.getTitulo() + " ") + Uri.encode(libroSeleccionado.getAutores()) + "&fields=title,author_name,first_publish_year,number_of_pages_median";
-            Log.d("URL OpenLibrary: ", url);
-        } else {
-            url = "https://openlibrary.org/search.json?q=" + Uri.encode(libroSeleccionado.getTitulo() + " ") + Uri.encode(libroSeleccionado.getAutores()) + "&fields=title,author_name,first_publish_year,number_of_pages_median";
-            Log.d("URL OpenLibrary: ", url);
-        }
-
+        String url = "https://openlibrary.org/search.json?q=" + Uri.encode(libroSeleccionado.getTitulo() + " ") + Uri.encode(libroSeleccionado.getAutores()) + "&fields=title,author_name,first_publish_year,number_of_pages_median";
+        Log.d("URL OpenLibrary: ", url);
 
         JsonObjectRequest openLibraryRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -199,7 +191,6 @@ public class ConsultorAPIs {
                         JSONArray docs = response.getJSONArray("docs");
 
                         if (docs.length() == 0) {
-                            //mostrarLibroEncontrado();
                             Log.d("OpenLibrary", "No se encontro el libro para el término de búsqueda en Open Library.");
                             callback.onOpenLibraryComplete(libroSeleccionado);
                             return;
@@ -224,7 +215,6 @@ public class ConsultorAPIs {
                                 break;
                             }
                         }
-                        //mostrarLibroEncontrado();
                         callback.onOpenLibraryComplete(libroSeleccionado);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -237,8 +227,81 @@ public class ConsultorAPIs {
                 }
         );
         solicitud.add(openLibraryRequest);
-        //return libroSeleccionado;
     }
+
+    private void busquedaOpenLibraryISBN(String isbn, OpenLibraryCallback callback) {
+        if (libroSeleccionado == null) {
+            Log.d("OpenLibrary", "Libro no encontrado con GoogleBooks.");
+            callback.onOpenLibraryComplete(null);
+            return;
+        }
+
+        String url = "https://openlibrary.org/isbn/" + Uri.encode(isbn) + ".json";
+        Log.d("URL OpenLibrary: ", url);
+
+        JsonObjectRequest openLibraryRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+                        String titulo = response.optString("title", "No disponible");
+
+                        JSONArray authorsArray = response.optJSONArray("authors");
+                        String autores = "No disponible";
+                        if (authorsArray != null && authorsArray.length() > 0) {
+                            List<String> autoresList = new ArrayList<>();
+                            for (int i = 0; i < authorsArray.length(); i++) {
+                                JSONObject autorObj = authorsArray.getJSONObject(i);
+                                String authorKey = autorObj.optString("key");
+                                autoresList.add(authorKey.replace("/authors/", ""));
+                            }
+                            autores = String.join(", ", autoresList);
+                        }
+
+                        String fechaPublicacion = response.optString("publish_date", "No disponible");
+                        String numeroPaginas = response.has("number_of_pages") ?
+                                String.valueOf(response.getInt("number_of_pages")) : "No disponible";
+                        String descripcion = response.has("description") ?
+                                (response.get("description") instanceof JSONObject ?
+                                        ((JSONObject) response.get("description")).optString("value", "No disponible")
+                                        : response.getString("description"))
+                                : "No disponible";
+
+                        // No se proporciona una lista clara de categorías directamente en esta API
+                        String categoria = "No disponible";
+
+                        Libro libroOpenLibrary = new Libro(titulo, autores, fechaPublicacion, categoria, numeroPaginas, descripcion);
+
+
+                        if (fechaPublicacion != "No disponible") {
+                            libroSeleccionado.setFechaPublicacion(fechaPublicacion);
+                        }
+
+                        if (numeroPaginas != "No disponible") {
+                            libroSeleccionado.setNumeroPaginas(numeroPaginas);
+                        }
+
+                        Log.d("Open Library", "Libro seleccionado de Open Library\n" + libroOpenLibrary.infoLibro());
+
+
+                        callback.onOpenLibraryComplete(libroSeleccionado);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        callback.onOpenLibraryComplete(libroSeleccionado);
+                    }
+                },
+                error -> {
+                    if (error.networkResponse != null && error.networkResponse.statusCode == 404) {
+                        Log.e("Open Library", "Libro no encontrado en Open Library (404).");
+                    } else {
+                        Log.e("Open Library Error", "Error en la petición: " + error.getMessage());
+                    }
+
+                    callback.onOpenLibraryComplete(libroSeleccionado);
+                }
+        );
+        solicitud.add(openLibraryRequest);
+    }
+
 
     private void mostrarLibroEncontrado() {
         if (libroSeleccionado != null) {

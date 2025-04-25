@@ -57,7 +57,7 @@ public class PresentadorMostrarInfoLibro {
                 procesadorOCR.reconocerTexto(imagenProcesada, new ProcesadorOCR.ProcesamientoOCRCallback() {
                     @Override
                     public void onTextoDetectado(String textoDetectado) {
-                        Log.d("PresentadorMostrarInfoLibro", "Texto detectado de la imagen y corregido ortográficamente: " + textoDetectado);
+                        Log.d("PresentadorMostrarInfoLibro", "Texto detectado de la imagen: " + textoDetectado);
 
                         consultorAPIs.buscarLibro(textoDetectado, false, vistaMostrarInfoActivity, libroObtenido -> {
                             vistaMostrarInfoActivity.runOnUiThread(() -> vistaMostrarInfoActivity.mostrarInformacionLibro(
@@ -86,7 +86,7 @@ public class PresentadorMostrarInfoLibro {
 
     public void iniciarProcesamientoISBN(String isbn) {
         vistaMostrarInfoActivity.mostrarMensaje("Procesando código ISBN...");
-        
+
         consultorAPIs.buscarLibro(isbn, true, vistaMostrarInfoActivity, libroObtenido -> {
             vistaMostrarInfoActivity.runOnUiThread(() -> vistaMostrarInfoActivity.mostrarInformacionLibro(
                     libroObtenido.getTitulo(),
@@ -103,37 +103,37 @@ public class PresentadorMostrarInfoLibro {
 
     public void guardarLibro() {
         try {
-        if(libro != null){
-            LibroRepositorio repositorio = new LibroRepositorio(vistaMostrarInfoActivity);
-            repositorio.insertarLibro(libro);
+            if (libro != null) {
+                LibroRepositorio repositorio = new LibroRepositorio(vistaMostrarInfoActivity);
+                repositorio.insertarLibro(libro);
 
-            // Se recuperar el libro insertado (con ID asignado)
-            Libro libroInsertado = repositorio.buscarPorTitulo(libro.getTitulo()).get(0);
+                // Se recuperar el libro insertado (con ID asignado)
+                Libro libroInsertado = repositorio.buscarPorTitulo(libro.getTitulo()).get(0);
 
-            // Se guardar el libro en las listas
-            guardarLibroEnLista(libroInsertado, repositorio);
+                // Se guardar el libro en las listas
+                guardarLibroEnLista(libroInsertado, repositorio);
 
-            vistaMostrarInfoActivity.limpiarPantalla();
-            vistaMostrarInfoActivity.mostrarMensaje("Libro guardado exitosamente.");
-            vistaMostrarInfoActivity.cerrarPantalla();
-        }else{
-            vistaMostrarInfoActivity.mostrarMensaje("No se ha podido guardar el libro.");
-        }
+                vistaMostrarInfoActivity.limpiarPantalla();
+                vistaMostrarInfoActivity.mostrarMensaje("Libro guardado exitosamente.");
+                vistaMostrarInfoActivity.cerrarPantalla();
+            } else {
+                vistaMostrarInfoActivity.mostrarMensaje("No se ha podido guardar el libro.");
+            }
         } catch (Exception e) {
             Log.e("PresentadorMostrarInfoLibro", "Error al guardar el libro: " + e.getMessage());
         }
     }
 
-    public void guardarLibroEnLista(Libro libro, LibroRepositorio repositorio){
-        if(vistaMostrarInfoActivity.estaSeleccionadaNoLeidos()){
+    public void guardarLibroEnLista(Libro libro, LibroRepositorio repositorio) {
+        if (vistaMostrarInfoActivity.estaSeleccionadaNoLeidos()) {
             repositorio.agregarLibroALista(libro.getId(), "No leídos");
         }
 
-        if(vistaMostrarInfoActivity.estaSeleccionadaPrestados()){
+        if (vistaMostrarInfoActivity.estaSeleccionadaPrestados()) {
             repositorio.agregarLibroALista(libro.getId(), "Prestados");
         }
 
-        if(vistaMostrarInfoActivity.estaSeleccionadaPorComprar()){
+        if (vistaMostrarInfoActivity.estaSeleccionadaPorComprar()) {
             repositorio.agregarLibroALista(libro.getId(), "Por comprar");
         }
     }
