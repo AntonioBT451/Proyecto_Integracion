@@ -71,10 +71,10 @@ public class MostrarInfoActivity extends AppCompatActivity {
         btnGuardarLibro = findViewById(R.id.btnGuardarLibro);
         //btnGuardarLibro.setOnClickListener(v -> presentadorMostrarInfoLibro.guardarLibro());
         btnGuardarLibro.setOnClickListener(v -> {
-            try {
-                presentadorMostrarInfoLibro.guardarLibro();
-            } catch (Exception e) {
-                Log.e("MostrarInfoActivity", "Error al guardar el libro: " + e.getMessage()); 
+            if(validarCampos()){
+                confirmarRegistro();
+            } else {
+                Toast.makeText(this, "Por favor, ingrese el titulo u autor del libro", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -114,6 +114,27 @@ public class MostrarInfoActivity extends AppCompatActivity {
         chbLibrosPrestados.setChecked(false);
         chbLibrosPorComprar.setChecked(false);
         chbLibrosNoLeidos.setChecked(false);
+    }
+
+    private boolean validarCampos() {
+        String titulo = etTitulo.getText().toString().trim();
+        String autor = etAutor.getText().toString().trim();
+
+        if (titulo.isEmpty() || autor.isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    // Ventana emergente de confirmación para guardar un libro
+    private void confirmarRegistro() {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirmar registro")
+                .setMessage("¿Registrar libro " + etTitulo.getText() + "?")
+                .setPositiveButton("Sí", (dialog, which) -> presentadorMostrarInfoLibro.guardarLibro())
+                .setNegativeButton("No", null)
+                .show();
     }
 
     public void mostrarMensaje(String mensaje) {

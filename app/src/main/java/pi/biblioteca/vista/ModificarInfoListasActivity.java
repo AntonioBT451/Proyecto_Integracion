@@ -135,7 +135,7 @@ public class ModificarInfoListasActivity extends AppCompatActivity {
         }
     }
 
-    // Por confirmar si dejarlo
+    // Ventana emergente de confirmación para actualizar las listas un libro
     private void confirmarActualizacion() {
         new AlertDialog.Builder(this)
                 .setTitle("Confirmar actualización")
