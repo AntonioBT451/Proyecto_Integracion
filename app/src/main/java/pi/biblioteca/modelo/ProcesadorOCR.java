@@ -19,6 +19,7 @@ public class ProcesadorOCR {
     public interface ProcesamientoOCRCallback {
         void onTextoDetectado(String textoDetectado);
         void onError(String mensajeError);
+        void onTextoNoDetectado();
     }
 
     public void reconocerTexto(Bitmap BitmapImagen, ProcesamientoOCRCallback callback) {
@@ -65,9 +66,15 @@ public class ProcesadorOCR {
 
                         Log.d("ProcesadorOCR", "Procesamiento de texto (OCR y ortografico) completado exitosamente");
 */
-                        // Return the raw text without spelling correction
-                        callback.onTextoDetectado(textoResultante.toString());
-                        Log.d("ProcesadorOCR", "Texto detectado: " + textoResultante);
+
+
+                        if(textoResultante.length() == 0){
+                            callback.onTextoNoDetectado();
+                        } else {
+                            // Return the raw text without spelling correction
+                            callback.onTextoDetectado(textoResultante.toString());
+                            Log.d("ProcesadorOCR", "Texto detectado: " + textoResultante);
+                        }
                     })
                     .addOnFailureListener(e -> {
                         Log.e("ProcesadorOCR", "Error al reconocer texto", e);

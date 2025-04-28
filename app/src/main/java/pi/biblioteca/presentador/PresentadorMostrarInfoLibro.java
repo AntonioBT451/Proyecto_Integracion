@@ -60,22 +60,32 @@ public class PresentadorMostrarInfoLibro {
                         Log.d("PresentadorMostrarInfoLibro", "Texto detectado de la imagen: " + textoDetectado);
 
                         consultorAPIs.buscarLibro(textoDetectado, false, vistaMostrarInfoActivity, libroObtenido -> {
-                            vistaMostrarInfoActivity.runOnUiThread(() -> vistaMostrarInfoActivity.mostrarInformacionLibro(
-                                    libroObtenido.getTitulo(),
-                                    libroObtenido.getAutores(),
-                                    libroObtenido.getFechaPublicacion(),
-                                    libroObtenido.getCategoria(),
-                                    String.valueOf(libroObtenido.getNumeroPaginas()),
-                                    libroObtenido.getDescripcion()
-                            ));
-                            libro = libroObtenido;
-                            Log.d("PresentadorMostrarInfoLibro", "Información del libro mostrada con éxito.");
+                            if (libroObtenido == null) {
+                                vistaMostrarInfoActivity.mostrarMensaje("No se ha encontrado el libro");
+                            } else {
+                                vistaMostrarInfoActivity.runOnUiThread(() -> vistaMostrarInfoActivity.mostrarInformacionLibro(
+                                        libroObtenido.getTitulo(),
+                                        libroObtenido.getAutores(),
+                                        libroObtenido.getFechaPublicacion(),
+                                        libroObtenido.getCategoria(),
+                                        String.valueOf(libroObtenido.getNumeroPaginas()),
+                                        libroObtenido.getDescripcion()
+                                ));
+                                libro = libroObtenido;
+                                vistaMostrarInfoActivity.mostrarMensaje("Libro encontrado, coincidencia: " + libroObtenido.getSimilitudPuntaje());
+                                Log.d("PresentadorMostrarInfoLibro", "Información del libro mostrada con éxito.");
+                            }
                         });
                     }
 
                     @Override
                     public void onError(String error) {
                         Log.e("PresentadorMostrarInfoLibro", "Error al procesar la imagen en OCR o corrección ortográfica" + error);
+                    }
+
+                    @Override
+                    public void onTextoNoDetectado() {
+                        vistaMostrarInfoActivity.mostrarMensaje("No se ha podido reconocer el texto.");
                     }
                 });
             } catch (Exception e) {

@@ -43,6 +43,11 @@ public class ConsultorAPIs {
     }
 
     public void busquedaGoogleBooks(String consulta, LibroBusquedaCallback callback) {
+        if(consulta.isEmpty()){
+            Log.d("ConsultorAPIs", "BusquedaGoogleBooks()\n No se ha detectado texto en la imagen");
+            return;
+        }
+
         String url = "https://www.googleapis.com/books/v1/volumes?q=" + Uri.encode(consulta) + "&printType=books&maxResults=10&key=AIzaSyDL4o-4r9eeDOcY2XjtuMQX74TpWaoOqVs";
         Log.d("GoogleBooks URL", url);
 
@@ -55,12 +60,14 @@ public class ConsultorAPIs {
                         int totalItems = response.getInt("totalItems");
                         if (totalItems == 0) {
                             Log.d("GoogleBooks URL", "No se encontraron libros para el término de búsqueda (totalItems == 0).");
+                            callback.onLibroEncontrado(null);
                             return;
                         }
 
                         JSONArray items = response.getJSONArray("items");
                         if (items.length() == 0) {
                             Log.d("GoogleBooks URL", "No se encontraron libros para el término de búsqueda (items.length() == 0).");
+                            callback.onLibroEncontrado(null);
                             return;
                         }
 
@@ -97,9 +104,9 @@ public class ConsultorAPIs {
                                         titulo, similitudTitulo, autores, similitudAutor, similitudCombinada));
                             } else if (i < items.length() && !mejorSimilitudExist) {
                                 Log.d("GoogleBooks libro", "No se encontraron libros con una similitud mayor a la establecida.");
+                                callback.onLibroEncontrado(null);
                                 return;
                             }
-
                         }
 
                         //libroSeleccionado = busquedaOpenLibrary();
@@ -107,7 +114,6 @@ public class ConsultorAPIs {
 
                         // Modified to use callback
                         if (mejorSimilitud > 0.6) {
-
                             busquedaOpenLibrary(libro -> {
                                 libroSeleccionado = libro;
                                 callback.onLibroEncontrado(libroSeleccionado);
@@ -134,12 +140,14 @@ public class ConsultorAPIs {
                         int totalItems = response.getInt("totalItems");
                         if (totalItems == 0) {
                             Log.d("GoogleBooks URL", "No se encontraron libros para el término de búsqueda (totalItems == 0).");
+                            callback.onLibroEncontrado(null);
                             return;
                         }
 
                         JSONArray items = response.has("items") ? response.getJSONArray("items") : null;
                         if (items == null) {
                             Log.d("GoogleBooks URL", "No se encontro el libro para el término de búsqueda.");
+                            callback.onLibroEncontrado(null);
                             return;
                         }
 
@@ -301,7 +309,6 @@ public class ConsultorAPIs {
         );
         solicitud.add(openLibraryRequest);
     }
-
 
     private void mostrarLibroEncontrado() {
         if (libroSeleccionado != null) {
