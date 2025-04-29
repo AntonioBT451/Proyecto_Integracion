@@ -54,7 +54,6 @@ public class ConsultorAPIs {
         JsonObjectRequest googleRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     try {
-                        mejorSimilitud = 0.0;
                         Boolean mejorSimilitudExist = false;
 
                         int totalItems = response.getInt("totalItems");
@@ -81,6 +80,7 @@ public class ConsultorAPIs {
                             String descripcion = libro.optString("description", "No disponible");
 
                             Libro libroGoogleBooks = new Libro(titulo, autores, fechaPublicacion, categoria, numeroPaginas, descripcion);
+                            libroGoogleBooks.setFechaPublicacion(fechaPublicacion);
 
                             // Calculate separate similarities for title and author
                             double similitudTitulo = libroGoogleBooks.calcularSimilitud(consulta, titulo);
@@ -161,6 +161,7 @@ public class ConsultorAPIs {
                             String descripcion = libro.optString("description", "No disponible");
 
                             Libro libroGoogleBooks = new Libro(titulo, autores, fechaPublicacion, categoria, numeroPaginas, descripcion);
+                            libroGoogleBooks.setFechaPublicacion(fechaPublicacion);
                             libroSeleccionado = libroGoogleBooks;
 
                             Log.d("GoogleBooks libro", "Libro seleccionado de Google Book\n" + libroSeleccionado.infoLibro());

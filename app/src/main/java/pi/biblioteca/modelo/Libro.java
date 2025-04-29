@@ -1,5 +1,7 @@
 package pi.biblioteca.modelo;
 
+import android.util.Log;
+
 import org.apache.commons.text.similarity.JaroWinklerSimilarity;
 
 import androidx.room.Entity;
@@ -47,7 +49,31 @@ public class Libro {
     }
 
     public void setFechaPublicacion(String fechaPublicacion) {
-        this.fechaPublicacion = fechaPublicacion;
+        if (fechaPublicacion == null || fechaPublicacion.equals("No disponible")) {
+            this.fechaPublicacion = "No disponible";
+            return;
+        }
+
+        try {
+            // Eliminar cualquier texto que no sea número
+            String soloNumeros = fechaPublicacion.replaceAll("[^0-9]", "");
+            
+            // Si tenemos una fecha completa (YYYYMMDD o YYYYMM)
+            if (soloNumeros.length() >= 4) {
+                this.fechaPublicacion = soloNumeros.substring(0, 4);
+            } 
+            // Si tenemos solo el año
+            else if (soloNumeros.length() == 4) {
+                this.fechaPublicacion = soloNumeros;
+            } 
+            // Si no podemos determinar el año
+            else {
+                this.fechaPublicacion = fechaPublicacion;
+            }
+        } catch (Exception e) {
+            this.fechaPublicacion = "No disponible";
+            Log.e("Libro", "Error al formatear fecha: " + fechaPublicacion, e);
+        }
     }
 
     public void setCategoria(String categoria) {

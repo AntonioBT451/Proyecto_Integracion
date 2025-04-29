@@ -72,7 +72,7 @@ public class PresentadorMostrarInfoLibro {
                                         libroObtenido.getDescripcion()
                                 ));
                                 libro = libroObtenido;
-                                vistaMostrarInfoActivity.mostrarMensaje("Libro encontrado, coincidencia: " + libroObtenido.getSimilitudPuntaje());
+                                vistaMostrarInfoActivity.mostrarMensaje("Libro encontrado\nCoincidencia: " + (int)(libroObtenido.getSimilitudPuntaje() * 100) + "%");
                                 Log.d("PresentadorMostrarInfoLibro", "Información del libro mostrada con éxito.");
                             }
                         });
@@ -98,16 +98,20 @@ public class PresentadorMostrarInfoLibro {
         vistaMostrarInfoActivity.mostrarMensaje("Procesando código ISBN...");
 
         consultorAPIs.buscarLibro(isbn, true, vistaMostrarInfoActivity, libroObtenido -> {
-            vistaMostrarInfoActivity.runOnUiThread(() -> vistaMostrarInfoActivity.mostrarInformacionLibro(
-                    libroObtenido.getTitulo(),
-                    libroObtenido.getAutores(),
-                    libroObtenido.getFechaPublicacion(),
-                    libroObtenido.getCategoria(),
-                    String.valueOf(libroObtenido.getNumeroPaginas()),
-                    libroObtenido.getDescripcion()
-            ));
-            libro = libroObtenido;
-            vistaMostrarInfoActivity.mostrarMensaje("Información del libro mostrada con éxito.");
+            if (libroObtenido == null) {
+                vistaMostrarInfoActivity.mostrarMensaje("No se ha encontrado el libro");
+            } else {
+                vistaMostrarInfoActivity.runOnUiThread(() -> vistaMostrarInfoActivity.mostrarInformacionLibro(
+                        libroObtenido.getTitulo(),
+                        libroObtenido.getAutores(),
+                        libroObtenido.getFechaPublicacion(),
+                        libroObtenido.getCategoria(),
+                        String.valueOf(libroObtenido.getNumeroPaginas()),
+                        libroObtenido.getDescripcion()
+                ));
+                libro = libroObtenido;
+                vistaMostrarInfoActivity.mostrarMensaje("Libro encontrado\nISBN: " + isbn);
+            }
         });
     }
 

@@ -21,7 +21,7 @@ import pi.biblioteca.presentador.PresentadorMostrarInfoLibro;
 
 public class MostrarInfoActivity extends AppCompatActivity {
     private PresentadorMostrarInfoLibro presentadorMostrarInfoLibro;
-    private TextView tvInformacion, tvTitulo, tvAutor, tvFechaPublicacion, tvCategoria, tvNumeroPaginas, tvDescripcion;
+    private TextView tvInformacion, tvTitulo, tvAutor, tvFechaPublicacion, tvCategoria, tvNumeroPaginas, tvDescripcion, tvListas;
     private EditText etTitulo, etAutor, etFechaPublicacion, etCategoria, etNumeroPaginas, etDescripcion;
     private Button btnGuardarLibro;
     private CheckBox chbLibrosNoLeidos, chbLibrosPrestados, chbLibrosPorComprar;
@@ -56,6 +56,7 @@ public class MostrarInfoActivity extends AppCompatActivity {
         tvCategoria = findViewById(R.id.tvCategoria);
         tvNumeroPaginas = findViewById(R.id.tvNumeroPaginas);
         tvDescripcion = findViewById(R.id.tvDescripcion);
+        tvListas = findViewById(R.id.tvListas);
 
         etTitulo = findViewById(R.id.etTitulo);
         etAutor = findViewById(R.id.etAutor);

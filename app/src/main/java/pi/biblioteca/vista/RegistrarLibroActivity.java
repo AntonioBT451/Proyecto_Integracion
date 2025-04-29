@@ -115,7 +115,7 @@ public class RegistrarLibroActivity extends AppCompatActivity {
         }
     }
 
-    public void registrarConISBN(String codigoISBN) {
+    public void  registrarConISBN(String codigoISBN) {
         if (presentadorISBN.validarISBN(codigoISBN)) {
             Intent intent = new Intent(this, MostrarInfoActivity.class);
             intent.putExtra("codigoISBN", codigoISBN);

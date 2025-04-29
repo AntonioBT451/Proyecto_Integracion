@@ -18,8 +18,11 @@
 
             <TextView
                 android:id="@+id/tvInformacion"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
                 android:text="Información del Libro"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
@@ -114,26 +117,38 @@
                 android:inputType="textMultiLine"
                 android:textColor="#FFFFFF" />
 
+            <TextView
+                android:id="@+id/tvListas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="Listas"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
             <CheckBox
                 android:id="@+id/chbLibrosNoLeidos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTintMode="@color/material_dynamic_primary40"
-                android:text="Agregar a Libros Leídos"
+                android:text="Libros no leidos"
                 android:textColor="#FFFFFF" />
 
             <CheckBox
                 android:id="@+id/chbLibrosPrestados"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Agregar a Libros Prestados"
+                android:text="Libros prestados"
                 android:textColor="#FFFFFF" />
 
             <CheckBox
                 android:id="@+id/chbLibrosPorComprar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Agregar a Libros Por Comprar"
+                android:text="Libros por comprar"
                 android:textColor="#FFFFFF" />
 
             <Button

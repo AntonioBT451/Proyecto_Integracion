@@ -31,8 +31,12 @@ public class PresentadorISBN {
         escaner.startScan()
                 .addOnSuccessListener(barcode -> {
                     String codigoISBN = barcode.getRawValue();
-                    vistaRegistrarLibroActivity.mostrarCodigoISBN(codigoISBN);
-                    //validarISBN(codigoISBN);
+                    //vistaRegistrarLibroActivity.mostrarCodigoISBN(codigoISBN);
+                    if(validarISBN(codigoISBN)){
+                        vistaRegistrarLibroActivity.registrarConISBN(codigoISBN);
+                    } else {
+                        vistaRegistrarLibroActivity.mostrarMensaje("Código ISBN invalido");
+                    }
                 })
                 .addOnCanceledListener(this::onEscaneoCancelado)
                 .addOnFailureListener(e -> onEscaneoFallido());
