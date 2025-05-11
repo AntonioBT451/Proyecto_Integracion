@@ -21,7 +21,7 @@ public class ModificarInfoActivity extends AppCompatActivity {
     private PresentadorMostrarInfoLibro presentadorMostrarInfoLibro;
     private TextView tvInformacion, tvTitulo, tvAutor, tvFechaPublicacion, tvCategoria, tvNumeroPaginas, tvDescripcion;
     private EditText etTitulo, etAutor, etFechaPublicacion, etCategoria, etNumeroPaginas, etDescripcion;
-    private Button btnGuardarLibro;
+    private Button btnGuardarLibro, btnEliminarLibro;
     private CheckBox chbLibrosNoLeidos, chbLibrosPrestados, chbLibrosPorComprar;
 
     private Libro libro;
@@ -77,6 +77,11 @@ public class ModificarInfoActivity extends AppCompatActivity {
                 Toast.makeText(this, "Por favor, ingrese el titulo u autor del libro", Toast.LENGTH_SHORT).show();
             }
         });
+        
+        // Inicializar y configurar el botón de eliminar
+        btnEliminarLibro = findViewById(R.id.btnEliminarLibro);
+        btnEliminarLibro.setVisibility(android.view.View.VISIBLE); // Hacerlo visible solo en esta actividad
+        btnEliminarLibro.setOnClickListener(v -> confirmarEliminacion());
     }
 
     public void mostrarInformacionLibro(Libro libro) {
@@ -190,5 +195,30 @@ public class ModificarInfoActivity extends AppCompatActivity {
             .setPositiveButton("Sí", (dialog, which) -> actualizarLibro())
             .setNegativeButton("No", null)
             .show();
+    }
+
+    // Método para confirmar la eliminación del libro
+    private void confirmarEliminacion() {
+        new AlertDialog.Builder(this)
+            .setTitle("Confirmar eliminación")
+            .setMessage("¿Está seguro de eliminar este libro? Esta acción no se puede deshacer.")
+            .setPositiveButton("Sí", (dialog, which) -> eliminarLibro())
+            .setNegativeButton("No", null)
+            .show();
+    }
+    
+    // Método para eliminar el libro
+    private void eliminarLibro() {
+        if (libro != null) {
+            LibroRepositorio repositorio = new LibroRepositorio(this);
+            boolean eliminado = repositorio.eliminarLibro(libro);
+            
+            if (eliminado) {
+                Toast.makeText(this, "Libro eliminado correctamente", Toast.LENGTH_SHORT).show();
+                finish(); // Cerrar la actividad después de eliminar
+            } else {
+                Toast.makeText(this, "Error al eliminar el libro", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

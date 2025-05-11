@@ -158,6 +158,16 @@
                 android:backgroundTint="@color/material_dynamic_primary40"
                 android:text="Guardar Libro"
                 android:textColor="#FFFFFF" />
+                
+            <Button
+                android:id="@+id/btnEliminarLibro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:backgroundTint="#B71C1C"
+                android:text="Eliminar Libro"
+                android:textColor="#FFFFFF"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 

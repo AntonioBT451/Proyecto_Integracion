@@ -70,8 +70,23 @@ public class LibroRepositorio {
         }
     }
 
-    public void eliminarLibro(Libro libro) {
-        libroDao.eliminarLibro(libro);
+    public boolean eliminarLibro(Libro libro) {
+        try {
+            libroDao.eliminarLibro(libro);
+            
+            // Verificar si el libro ha sido eliminado
+            Libro libroVerificacion = libroDao.obtenerLibroPorId(libro.getId());
+            if (libroVerificacion == null) {
+                Log.d("LibroRepositorio", "El libro ha sido eliminado correctamente.");
+                return true;
+            } else {
+                Log.d("LibroRepositorio", "El libro no ha sido eliminado.");
+                return false;
+            }
+        } catch (Exception e) {
+            Log.e("LibroRepositorio", "Error al eliminar el libro: " + e.getMessage());
+            return false;
+        }
     }
 
     public List<Libro> obtenerTodosLosLibros() {

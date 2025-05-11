@@ -42,7 +42,10 @@ public interface LibroDao {
     List<Libro> buscarPorAno(String query);
 
     // Buscar libros por título, autor o año combinados
-    @Query("SELECT * FROM libros WHERE titulo LIKE '%' || :query || '%' OR autores LIKE '%' || :query || '%' OR fechaPublicacion LIKE '%' || :query || '%'")
+    @Query("SELECT * FROM libros WHERE " +
+           "LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(titulo, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE('%' || :query || '%', 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) OR " +
+           "LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(autores, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE('%' || :query || '%', 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) OR " +
+           "fechaPublicacion LIKE '%' || :query || '%'")
     List<Libro> buscarPorTituloAutorAno(String query);
 
     // Obtener un libro por su ID

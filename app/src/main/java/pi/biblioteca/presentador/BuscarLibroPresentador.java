@@ -3,11 +3,9 @@ package pi.biblioteca.presentador;
 import java.util.List;
 
 import android.content.Context;
-import java.util.List;
 
 import pi.biblioteca.modelo.Libro;
 import pi.biblioteca.basededatos.LibroRepositorio;
-import pi.biblioteca.modelo.Libro;
 
 public class BuscarLibroPresentador {
     private IBuscarLibroVista vista;
@@ -16,6 +14,7 @@ public class BuscarLibroPresentador {
     public interface IBuscarLibroVista {
         void mostrarResultados(List<Libro> libros);
         void mostrarMensaje(String mensaje);
+        void ocultarTabla();
     }
 
     public BuscarLibroPresentador(IBuscarLibroVista vista, Context context) {
@@ -26,7 +25,8 @@ public class BuscarLibroPresentador {
     public void buscarLibros(String query) {
         List<Libro> resultados = repositorio.buscarPorTituloAutorAno(query);
         if (resultados.isEmpty()) {
-            vista.mostrarMensaje("No se encontraron resultados.");
+            vista.ocultarTabla();
+            vista.mostrarMensaje("No se encontraron resultados");
         } else {
             vista.mostrarResultados(resultados);
         }
@@ -35,7 +35,8 @@ public class BuscarLibroPresentador {
     public void buscarTodosLosLibros(){
         List<Libro> resultados = repositorio.obtenerTodosLosLibros();
         if (resultados.isEmpty()) {
-            vista.mostrarMensaje("No se tiene libros registrados.");
+            vista.ocultarTabla();
+            vista.mostrarMensaje("No se tiene libros registrados");
         } else {
             vista.mostrarResultados(resultados);
         }
