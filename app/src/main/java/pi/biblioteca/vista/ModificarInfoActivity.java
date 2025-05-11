@@ -189,20 +189,20 @@ public class ModificarInfoActivity extends AppCompatActivity {
 
     // Por confirmar si dejarlo
     private void confirmarActualizacion() {
-        new AlertDialog.Builder(this)
+        androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this, R.style.AlertDialogCustom)
             .setTitle("Confirmar actualización")
             .setMessage("¿Está seguro de actualizar la información del libro?")
-            .setPositiveButton("Sí", (dialog, which) -> actualizarLibro())
+            .setPositiveButton("Sí", (d, which) -> actualizarLibro())
             .setNegativeButton("No", null)
             .show();
     }
 
     // Método para confirmar la eliminación del libro
     private void confirmarEliminacion() {
-        new AlertDialog.Builder(this)
+        androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this, R.style.AlertDialogCustom)
             .setTitle("Confirmar eliminación")
             .setMessage("¿Está seguro de eliminar este libro? Esta acción no se puede deshacer.")
-            .setPositiveButton("Sí", (dialog, which) -> eliminarLibro())
+            .setPositiveButton("Sí", (d, which) -> eliminarLibro())
             .setNegativeButton("No", null)
             .show();
     }

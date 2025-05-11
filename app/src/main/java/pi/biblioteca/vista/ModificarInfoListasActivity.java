@@ -137,10 +137,9 @@ public class ModificarInfoListasActivity extends AppCompatActivity {
 
     // Ventana emergente de confirmación para actualizar las listas un libro
     private void confirmarActualizacion() {
-        new AlertDialog.Builder(this)
-                .setTitle("Confirmar actualización")
+        androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this, R.style.AlertDialogCustom)                .setTitle("Confirmar actualización")
                 .setMessage("¿Está seguro de actualizar las listas del libro?")
-                .setPositiveButton("Sí", (dialog, which) -> actualizarLibro())
+                .setPositiveButton("Sí", (d, which) -> actualizarLibro())
                 .setNegativeButton("No", null)
                 .show();
     }

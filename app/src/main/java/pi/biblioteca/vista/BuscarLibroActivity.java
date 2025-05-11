@@ -64,8 +64,10 @@ public class BuscarLibroActivity extends AppCompatActivity
                     mostrarMensaje("Ingrese un título o autor a buscar");
                     return;
                 }
-                btnMostrarTodos.setVisibility(View.VISIBLE);
-                presentador.buscarLibros(query);
+
+                if(presentador.buscarLibros(query) > 0) {
+                    btnMostrarTodos.setVisibility(View.VISIBLE);
+                }
             }
         });
         

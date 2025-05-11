@@ -130,10 +130,10 @@ public class MostrarInfoActivity extends AppCompatActivity {
 
     // Ventana emergente de confirmación para guardar un libro
     private void confirmarRegistro() {
-        new AlertDialog.Builder(this)
+        androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this, R.style.AlertDialogCustom)
                 .setTitle("Confirmar registro")
                 .setMessage("¿Registrar libro " + etTitulo.getText() + "?")
-                .setPositiveButton("Sí", (dialog, which) -> presentadorMostrarInfoLibro.guardarLibro())
+                .setPositiveButton("Sí", (d, which) -> presentadorMostrarInfoLibro.guardarLibro())
                 .setNegativeButton("No", null)
                 .show();
     }

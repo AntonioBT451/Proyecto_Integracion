@@ -133,7 +133,6 @@
                 android:id="@+id/chbLibrosNoLeidos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTintMode="@color/material_dynamic_primary40"
                 android:text="Libros no leidos"
                 android:textColor="#FFFFFF" />
 

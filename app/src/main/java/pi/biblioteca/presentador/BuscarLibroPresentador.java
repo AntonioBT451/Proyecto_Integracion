@@ -22,13 +22,15 @@ public class BuscarLibroPresentador {
         this.repositorio = new LibroRepositorio(context);
     }
 
-    public void buscarLibros(String query) {
+    public int buscarLibros(String query) {
         List<Libro> resultados = repositorio.buscarPorTituloAutorAno(query);
         if (resultados.isEmpty()) {
             vista.ocultarTabla();
             vista.mostrarMensaje("No se encontraron resultados");
+            return resultados.size();
         } else {
             vista.mostrarResultados(resultados);
+            return resultados.size();
         }
     }
 
