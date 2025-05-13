@@ -20,8 +20,9 @@ public class ListasActivity extends AppCompatActivity implements LibroAdaptador.
     private LibroAdaptador adaptador;
     private LibroRepositorio repositorio;
     private Button btnLibrosNoLeidos, btnLibrosPrestados, btnLibrosPorComprar, btnBuscar;
+    private Button btnLibrosNoLeidosInicial, btnLibrosPrestadosInicial, btnLibrosPorComprarInicial, btnBuscarInicial;
     private TextView tvTituloLista;
-    private LinearLayout llHeader;
+    private LinearLayout llHeader, botonesIniciales, contenedorBotonesInferior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +38,32 @@ public class ListasActivity extends AppCompatActivity implements LibroAdaptador.
 
     private void inicializarVistas() {
         rvLibrosLista = findViewById(R.id.rvLibrosLista);
+        
+        // Botones inferiores (después de seleccionar)
         btnLibrosNoLeidos = findViewById(R.id.btnLibrosNoLeidos);
         btnLibrosPrestados = findViewById(R.id.btnLibrosPrestados);
         btnLibrosPorComprar = findViewById(R.id.btnLibrosPorComprar);
         btnBuscar = findViewById(R.id.btnBuscarLibro);
+        
+        // Botones iniciales (centrados)
+        btnLibrosNoLeidosInicial = findViewById(R.id.btnLibrosNoLeidosInicial);
+        btnLibrosPrestadosInicial = findViewById(R.id.btnLibrosPrestadosInicial);
+        btnLibrosPorComprarInicial = findViewById(R.id.btnLibrosPorComprarInicial);
+        btnBuscarInicial = findViewById(R.id.btnBuscarLibroInicial);
+        
         tvTituloLista = findViewById(R.id.tv_tituloLista);
         llHeader = findViewById(R.id.headerLayout);
-
+        
+        // Contenedores
+        botonesIniciales = findViewById(R.id.botonesIniciales);
+        contenedorBotonesInferior = findViewById(R.id.contenedorBotonesInferior);
+        
+        // Configuración inicial: mostrar botones centrales, ocultar el resto
+        botonesIniciales.setVisibility(View.VISIBLE);
+        contenedorBotonesInferior.setVisibility(View.GONE);
         tvTituloLista.setVisibility(View.INVISIBLE);
         llHeader.setVisibility(View.INVISIBLE);
+        rvLibrosLista.setVisibility(View.INVISIBLE);
     }
 
     private void configurarRecyclerView() {
@@ -63,31 +81,59 @@ public class ListasActivity extends AppCompatActivity implements LibroAdaptador.
     }
 
     private void configurarBotones() {
+        // Configurar botones inferiores
         btnLibrosNoLeidos.setOnClickListener(v -> {
-            tvTituloLista.setVisibility(View.VISIBLE);
-            llHeader.setVisibility(View.VISIBLE);
-            tvTituloLista.setText("Libros no leídos");
-            mostrarLibrosDeLista("No leídos");
+            mostrarListaSeleccionada("Libros no leídos", "No leídos");
         });
 
         btnLibrosPrestados.setOnClickListener(v -> {
-            tvTituloLista.setVisibility(View.VISIBLE);
-            llHeader.setVisibility(View.VISIBLE);
-            tvTituloLista.setText("Libros prestados");
-            mostrarLibrosDeLista("Prestados");
+            mostrarListaSeleccionada("Libros prestados", "Prestados");
         });
 
         btnLibrosPorComprar.setOnClickListener(v -> {
-            tvTituloLista.setVisibility(View.VISIBLE);
-            llHeader.setVisibility(View.VISIBLE);
-            tvTituloLista.setText("Libros por comprar");
-            mostrarLibrosDeLista("Por comprar");
+            mostrarListaSeleccionada("Libros por comprar", "Por comprar");
         });
 
         btnBuscar.setOnClickListener(v -> {
-            Intent intent = new Intent(ListasActivity.this, BuscarLibroActivity.class);
-            startActivity(intent);
+            abrirBusquedaLibros();
         });
+        
+        // Configurar botones iniciales (centrados)
+        btnLibrosNoLeidosInicial.setOnClickListener(v -> {
+            mostrarListaSeleccionada("Libros no leídos", "No leídos");
+        });
+
+        btnLibrosPrestadosInicial.setOnClickListener(v -> {
+            mostrarListaSeleccionada("Libros prestados", "Prestados");
+        });
+
+        btnLibrosPorComprarInicial.setOnClickListener(v -> {
+            mostrarListaSeleccionada("Libros por comprar", "Por comprar");
+        });
+        
+        // Configurar botón de búsqueda inicial
+        btnBuscarInicial.setOnClickListener(v -> {
+            abrirBusquedaLibros();
+        });
+    }
+    
+    // Método para abrir la actividad de búsqueda
+    private void abrirBusquedaLibros() {
+        Intent intent = new Intent(ListasActivity.this, BuscarLibroActivity.class);
+        startActivity(intent);
+    }
+    
+    private void mostrarListaSeleccionada(String tituloMostrado, String nombreLista) {
+        // Cambiar visibilidad de los elementos
+        botonesIniciales.setVisibility(View.GONE);
+        contenedorBotonesInferior.setVisibility(View.VISIBLE);
+        tvTituloLista.setVisibility(View.VISIBLE);
+        llHeader.setVisibility(View.VISIBLE);
+        rvLibrosLista.setVisibility(View.VISIBLE);
+        
+        // Actualizar título y mostrar libros
+        tvTituloLista.setText(tituloMostrado);
+        mostrarLibrosDeLista(nombreLista);
     }
 
     private void mostrarLibrosDeLista(String nombreLista) {

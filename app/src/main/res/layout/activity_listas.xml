@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/black">
 
     <TextView
@@ -25,7 +24,59 @@
         android:textSize="18sp"
         android:textColor="#FFFFFF"
         android:gravity="center"
-        android:layout_marginTop="4dp" />
+        android:layout_below="@id/tv_Listas"
+        android:layout_marginTop="4dp"
+        android:visibility="invisible" />
+
+    <!-- Contenedor para los botones centrados (estado inicial) -->
+    <LinearLayout
+        android:id="@+id/botonesIniciales"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:layout_marginHorizontal="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLibrosNoLeidosInicial"
+            app:cornerRadius="4dp"
+            android:text="No Leídos"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="2dp"
+            android:backgroundTint="@color/material_dynamic_primary60" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLibrosPrestadosInicial"
+            app:cornerRadius="4dp"
+            android:text="Prestados"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="2dp"
+            android:backgroundTint="@color/material_dynamic_primary60" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLibrosPorComprarInicial"
+            app:cornerRadius="4dp"
+            android:text="Por Comprar"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="2dp"
+            android:backgroundTint="@color/material_dynamic_primary60" />
+            
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBuscarLibroInicial"
+            app:cornerRadius="4dp"
+            android:text="Buscar Libro"
+            android:textColor="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="2dp"
+            android:backgroundTint="@color/material_dynamic_primary50" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/headerLayout"
@@ -34,9 +85,11 @@
         android:orientation="horizontal"
         android:padding="12dp"
         android:layout_marginHorizontal="8dp"
+        android:layout_below="@id/tv_tituloLista"
         android:layout_marginTop="10dp"
         android:background="#1F1F1F"
-        android:elevation="4dp">
+        android:elevation="4dp"
+        android:visibility="invisible">
 
         <TextView
             android:layout_width="0dp"
@@ -72,72 +125,79 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvLibrosLista"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:clipToPadding="false"
         android:paddingTop="1dp"
         android:scrollbars="vertical"
         android:layout_marginHorizontal="8dp"
         android:layout_marginTop="2dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerLayout"/>
+        android:layout_below="@id/headerLayout"
+        android:layout_above="@id/contenedorBotonesInferior"
+        android:visibility="invisible"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnBuscarLibro"
-        app:cornerRadius="4dp"
-        android:text="Buscar Libro"
-        android:textColor="@color/white"
+    <!-- Contenedor para los botones inferiores (después de seleccionar) -->
+    <LinearLayout
+        android:id="@+id/contenedorBotonesInferior"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="@color/material_dynamic_primary50" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="0dp"
-        android:layout_marginHorizontal="8dp"
-        android:layout_marginBottom="8dp">
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLibrosNoLeidos"
+            android:id="@+id/btnBuscarLibro"
             app:cornerRadius="4dp"
-            android:text="No Leídos"
+            android:text="Buscar Libro"
             android:textColor="@color/white"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:paddingVertical="2dp"
-            android:layout_marginEnd="2dp"
-            android:backgroundTint="@color/material_dynamic_primary60" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/material_dynamic_primary50" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLibrosPrestados"
-            app:cornerRadius="4dp"
-            android:text="Prestados"
-            android:textColor="@color/white"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:paddingHorizontal="1dp"
-            android:layout_marginHorizontal="2dp"
-            android:backgroundTint="@color/material_dynamic_primary60" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="0dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="8dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLibrosPorComprar"
-            app:cornerRadius="4dp"
-            android:text="Por Comprar"
-            android:textColor="@color/white"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:paddingVertical="2dp"
-            android:layout_marginStart="2dp"
-            android:backgroundTint="@color/material_dynamic_primary60" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLibrosNoLeidos"
+                app:cornerRadius="4dp"
+                android:text="No Leídos"
+                android:textColor="@color/white"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingVertical="2dp"
+                android:layout_marginEnd="2dp"
+                android:backgroundTint="@color/material_dynamic_primary60" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLibrosPrestados"
+                app:cornerRadius="4dp"
+                android:text="Prestados"
+                android:textColor="@color/white"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingHorizontal="1dp"
+                android:layout_marginHorizontal="2dp"
+                android:backgroundTint="@color/material_dynamic_primary60" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLibrosPorComprar"
+                app:cornerRadius="4dp"
+                android:text="Por Comprar"
+                android:textColor="@color/white"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingVertical="2dp"
+                android:layout_marginStart="2dp"
+                android:backgroundTint="@color/material_dynamic_primary60" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>
