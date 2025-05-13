@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
@@ -150,19 +151,21 @@
                 android:text="Libros por comprar"
                 android:textColor="#FFFFFF" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGuardarLibro"
+                app:cornerRadius="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/material_dynamic_primary40"
                 android:text="Guardar Libro"
                 android:textColor="#FFFFFF" />
-                
-            <Button
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEliminarLibro"
+                app:cornerRadius="4dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="0dp"
                 android:backgroundTint="#B71C1C"
                 android:text="Eliminar Libro"
                 android:textColor="#FFFFFF"

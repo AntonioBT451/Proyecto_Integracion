@@ -49,8 +49,9 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <!-- Botón Capturar Imagen -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/botonCaptura"
+        app:cornerRadius="4dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -88,8 +89,9 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <!-- Botón Escanear Código -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCapturaISBN"
+        app:cornerRadius="4dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -140,8 +142,9 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <!-- Botón Ingresar ISBN -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnIngresarISBN"
+        app:cornerRadius="4dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

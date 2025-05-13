@@ -41,8 +41,9 @@
         app:layout_constraintTop_toBottomOf="@id/tv_biblioteca_personal" />
 
     <!-- Botón Registrar libro -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_registrar_libro"
+        app:cornerRadius="4dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="168dp"
@@ -55,11 +56,12 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_proyecto_integracion" />
 
     <!-- Botón Buscar -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_buscar"
+        app:cornerRadius="4dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:backgroundTint="@color/material_dynamic_primary50"
         android:padding="16dp"
         android:text="Buscar"
@@ -71,11 +73,12 @@
         tools:ignore="MissingConstraints" />
 
     <!-- Botón Listas -->
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_listas"
+        app:cornerRadius="4dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:backgroundTint="@color/material_dynamic_primary60"
         android:padding="16dp"
         android:text="Listas"

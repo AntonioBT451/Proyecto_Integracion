@@ -84,8 +84,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerLayout"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnBuscarLibro"
+        app:cornerRadius="4dp"
         android:text="Buscar Libro"
         android:textColor="@color/white"
         android:layout_width="match_parent"
@@ -102,8 +103,9 @@
         android:layout_marginHorizontal="8dp"
         android:layout_marginBottom="8dp">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLibrosNoLeidos"
+            app:cornerRadius="4dp"
             android:text="No Leídos"
             android:textColor="@color/white"
             android:layout_width="0dp"
@@ -113,8 +115,9 @@
             android:layout_marginEnd="2dp"
             android:backgroundTint="@color/material_dynamic_primary60" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLibrosPrestados"
+            app:cornerRadius="4dp"
             android:text="Prestados"
             android:textColor="@color/white"
             android:layout_width="0dp"
@@ -124,8 +127,9 @@
             android:layout_marginHorizontal="2dp"
             android:backgroundTint="@color/material_dynamic_primary60" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLibrosPorComprar"
+            app:cornerRadius="4dp"
             android:text="Por Comprar"
             android:textColor="@color/white"
             android:layout_width="0dp"
