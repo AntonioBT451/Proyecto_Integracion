@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +74,8 @@ public class ConsultorAPIs {
 
                         for (int i = 0; i < items.length(); i++) {
                             JSONObject libro = items.getJSONObject(i).getJSONObject("volumeInfo");
+
+                            String isbn = getISBNGoogleBooks(libro);
                             String titulo = libro.optString("title", "No disponible");
                             String autores = libro.has("authors") ? libro.getJSONArray("authors").join(", ").replaceAll("\"", "") : "No disponible";
                             String fechaPublicacion = libro.optString("publishedDate", "No disponible");
@@ -79,7 +83,7 @@ public class ConsultorAPIs {
                             String numeroPaginas = libro.optString("pageCount", "No disponible");
                             String descripcion = libro.optString("description", "No disponible");
 
-                            Libro libroGoogleBooks = new Libro(titulo, autores, fechaPublicacion, categoria, numeroPaginas, descripcion);
+                            Libro libroGoogleBooks = new Libro(isbn, titulo, autores, fechaPublicacion, categoria, numeroPaginas, descripcion);
                             libroGoogleBooks.setFechaPublicacion(fechaPublicacion);
 
                             // Calculate separate similarities for title and author
@@ -102,6 +106,7 @@ public class ConsultorAPIs {
                                 Log.d("GoogleBooks libro", String.format(
                                         "Libro encontrado:\nTítulo: %s (Similitud: %.2f)\nAutor: %s (Similitud: %.2f)\nSimilitud Total: %f",
                                         titulo, similitudTitulo, autores, similitudAutor, similitudCombinada));
+                                Log.d("GoogleBooks libro", libroGoogleBooks.infoLibro());
                             } else if (i < items.length() && !mejorSimilitudExist) {
                                 Log.d("GoogleBooks libro", "No se encontraron libros con una similitud mayor a la establecida.");
                                 callback.onLibroEncontrado(null);
@@ -153,6 +158,7 @@ public class ConsultorAPIs {
 
                         for (int i = 0; i < items.length(); i++) {
                             JSONObject libro = items.getJSONObject(i).getJSONObject("volumeInfo");
+                            String isbn = consulta;
                             String titulo = libro.optString("title", "No disponible");
                             String autores = libro.has("authors") ? libro.getJSONArray("authors").join(", ").replaceAll("\"", "") : "No disponible";
                             String fechaPublicacion = libro.optString("publishedDate", "No disponible");
@@ -160,7 +166,7 @@ public class ConsultorAPIs {
                             String numeroPaginas = libro.optString("pageCount", "No disponible");
                             String descripcion = libro.optString("description", "No disponible");
 
-                            Libro libroGoogleBooks = new Libro(titulo, autores, fechaPublicacion, categoria, numeroPaginas, descripcion);
+                            Libro libroGoogleBooks = new Libro(isbn, titulo, autores, fechaPublicacion, categoria, numeroPaginas, descripcion);
                             libroGoogleBooks.setFechaPublicacion(fechaPublicacion);
                             libroSeleccionado = libroGoogleBooks;
 
@@ -191,8 +197,13 @@ public class ConsultorAPIs {
             return;
         }
 
-        String url = "https://openlibrary.org/search.json?q=" + Uri.encode(libroSeleccionado.getTitulo() + " ") + Uri.encode(libroSeleccionado.getAutores()) + "&fields=title,author_name,first_publish_year,number_of_pages_median";
-        Log.d("URL OpenLibrary: ", url);
+        try {
+            String query = libroSeleccionado.getTitulo() + " " + libroSeleccionado.getAutores();
+            String encodedQuery = URLEncoder.encode(query, "UTF-8");
+
+            String url = "https://openlibrary.org/search.json?q=" + encodedQuery
+                    + "&fields=title,author_name,first_publish_year,number_of_pages_median,ia";
+            Log.d("URL OpenLibrary:", url);
 
         JsonObjectRequest openLibraryRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
@@ -207,6 +218,7 @@ public class ConsultorAPIs {
 
                         for (int i = 0; i < docs.length(); i++) {
                             JSONObject libro = docs.getJSONObject(i);
+                            String isbn = getISBNOpenLibrary(libro);
                             String titulo = libro.optString("title", "No disponible");
                             String autores = libro.has("author_name") ? libro.getJSONArray("author_name").join(", ").replaceAll("\"", "") : "No disponible";
                             String fechaPublicacion = libro.optString("first_publish_year", "No disponible");
@@ -214,13 +226,17 @@ public class ConsultorAPIs {
                             String numeroPaginas = libro.has("number_of_pages_median") ? String.valueOf(libro.getInt("number_of_pages_median")) : "No disponible";
                             String descripcion = libro.has("description") ? libro.getString("description") : "No disponible";
 
-                            Libro libroOpenLibrary = new Libro(titulo, autores, fechaPublicacion, categoria, numeroPaginas, descripcion);
+                            Libro libroOpenLibrary = new Libro(isbn, titulo, autores, fechaPublicacion, categoria, numeroPaginas, descripcion);
 
                             if (libroOpenLibrary.calcularSimilitud(libroSeleccionado.getTitulo(), titulo) > 0.80 && libroOpenLibrary.calcularSimilitud(libroSeleccionado.getAutores(), autores) > 0.60) {
+                                if(libroSeleccionado.getIsbn().contains("No disponible")){
+                                    libroSeleccionado.setIsbn(isbn);
+                                }
                                 libroSeleccionado.setFechaPublicacion(fechaPublicacion);
                                 libroSeleccionado.setNumeroPaginas(numeroPaginas);
 
                                 Log.d("Open Library", "Libro seleccionado de Open Library\n" + libroOpenLibrary.infoLibro());
+                                Log.d("LIBRO ENCONTRADO", "Libro:\n" + libroSeleccionado.infoLibro());
                                 break;
                             }
                         }
@@ -236,6 +252,9 @@ public class ConsultorAPIs {
                 }
         );
         solicitud.add(openLibraryRequest);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     private void busquedaOpenLibraryISBN(String isbn, OpenLibraryCallback callback) {
@@ -277,7 +296,7 @@ public class ConsultorAPIs {
                         // No se proporciona una lista clara de categorías directamente en esta API
                         String categoria = "No disponible";
 
-                        Libro libroOpenLibrary = new Libro(titulo, autores, fechaPublicacion, categoria, numeroPaginas, descripcion);
+                        Libro libroOpenLibrary = new Libro(isbn, titulo, autores, fechaPublicacion, categoria, numeroPaginas, descripcion);
 
 
                         if (fechaPublicacion != "No disponible") {
@@ -309,6 +328,44 @@ public class ConsultorAPIs {
                 }
         );
         solicitud.add(openLibraryRequest);
+    }
+
+    private String getISBNGoogleBooks(JSONObject volumeInfo){
+        try {
+            if (volumeInfo.has("industryIdentifiers")) {
+                JSONArray identificadores = volumeInfo.getJSONArray("industryIdentifiers");
+                for (int i = 0; i < identificadores.length(); i++) {
+                    JSONObject identificador = identificadores.getJSONObject(i);
+                    if ("ISBN_10".equals(identificador.getString("type"))) {
+                        return identificador.getString("identifier");
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            Log.e("ISBN_10 Error", "Error al obtener ISBN_10: " + e.getMessage());
+        }
+        return "No disponible";
+    }
+
+    private String getISBNOpenLibrary(JSONObject libro) {
+        try {
+            if (libro.has("ia")) {
+                JSONArray iaArray = libro.getJSONArray("ia");
+                for (int i = 0; i < iaArray.length(); i++) {
+                    String valor = iaArray.getString(i);
+                    if (valor.startsWith("isbn_")) {
+                        String posibleIsbn = valor.substring(5); // Remueve "isbn_"
+                        if ((posibleIsbn.length() == 10 && posibleIsbn.matches("\\d{9}[\\dX]"))
+                                || (posibleIsbn.length() == 13 && posibleIsbn.matches("\\d{13}")) ) {
+                            return posibleIsbn;
+                        }
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            Log.e("ISBN_10 Error", "Error extrayendo ISBN_10 desde 'ia': " + e.getMessage());
+        }
+        return "No disponible";
     }
 
     private void mostrarLibroEncontrado() {

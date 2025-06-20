@@ -12,6 +12,7 @@ import androidx.room.PrimaryKey;
 public class Libro {
     @PrimaryKey(autoGenerate = true)
     private int id;
+    private String isbn;
     private String titulo;
     private String autores;
     private String fechaPublicacion;
@@ -22,7 +23,8 @@ public class Libro {
     @Ignore
     private double similitudPuntaje;
 
-    public Libro(String titulo, String autores, String fechaPublicacion, String categoria, String numeroPaginas, String descripcion) {
+    public Libro(String isbn, String titulo, String autores, String fechaPublicacion, String categoria, String numeroPaginas, String descripcion) {
+        this.isbn = isbn;
         this.titulo = titulo;
         this.autores = autores;
         this.fechaPublicacion = fechaPublicacion;
@@ -32,9 +34,7 @@ public class Libro {
         this.similitudPuntaje = 0;
     }
 
-    public int getId() {
-        return id;
-    }
+    public void setIsbn(String isbn){ this.isbn = isbn; }
 
     public void setId(int id) {
         this.id = id;
@@ -92,6 +92,12 @@ public class Libro {
         this.similitudPuntaje = similitudPuntaje;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getIsbn() { return isbn;}
+
     public String getTitulo() {
         return titulo;
     }
@@ -121,10 +127,10 @@ public class Libro {
     }
 
     // Método para mostrar la información del libro como String
-    public String infoLibro() {
+        public String infoLibro() {
         return String.format(
-                "Título: %s\nAutor(es): %s\nAño de publicación: %s\nNúmero de páginas: %s\nCategorías: %s\nDescripción: %s\n",
-                titulo, autores, fechaPublicacion, numeroPaginas, categoria, descripcion
+                "ISBN: %s\nTítulo: %s\nAutor(es): %s\nAño de publicación: %s\nNúmero de páginas: %s\nCategorías: %s\nDescripción: %s\n",
+                isbn, titulo, autores, fechaPublicacion, numeroPaginas, categoria, descripcion
         );
     }
 
