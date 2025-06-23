@@ -65,7 +65,7 @@ public class BuscarLibroActivity extends AppCompatActivity
                     return;
                 }
 
-                if(presentador.buscarLibros(query) > 0) {
+                if(presentador.buscarLibros(query) >= 0) {
                     btnMostrarTodos.setVisibility(View.VISIBLE);
                 }
             }

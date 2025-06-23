@@ -67,8 +67,6 @@ public class ModificarInfoActivity extends AppCompatActivity {
         chbLibrosPrestados = findViewById(R.id.chbLibrosPrestados);
         chbLibrosPorComprar = findViewById(R.id.chbLibrosPorComprar);
 
-        chbLibrosNoLeidos.setText("Libro en 'Libros leidos'");
-
         btnGuardarLibro = findViewById(R.id.btnGuardarLibro);
         btnGuardarLibro.setText("Actualizar libro");
         btnGuardarLibro.setOnClickListener(v -> {

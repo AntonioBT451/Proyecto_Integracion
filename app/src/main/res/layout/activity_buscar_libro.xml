@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
         android:backgroundTint="@color/material_dynamic_primary50"
-        android:text="Mostrar todos los libros"
+        android:text="Todos los libros"
         android:textColor="#FFFFFF"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"

@@ -40,6 +40,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_biblioteca_personal" />
 
+    <TextView
+        android:id="@+id/tv_tutora"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Dra. Beatriz Adriana González Beltrán"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_proyecto_integracion"/>
+
     <!-- Botón Registrar libro -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_registrar_libro"
