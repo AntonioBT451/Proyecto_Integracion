@@ -34,7 +34,9 @@ public class Libro {
         this.similitudPuntaje = 0;
     }
 
-    public void setIsbn(String isbn){ this.isbn = isbn; }
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
 
     public void setId(int id) {
         this.id = id;
@@ -57,15 +59,15 @@ public class Libro {
         try {
             // Eliminar cualquier texto que no sea número
             String soloNumeros = fechaPublicacion.replaceAll("[^0-9]", "");
-            
+
             // Si tenemos una fecha completa (YYYYMMDD o YYYYMM)
             if (soloNumeros.length() >= 4) {
                 this.fechaPublicacion = soloNumeros.substring(0, 4);
-            } 
+            }
             // Si tenemos solo el año
             else if (soloNumeros.length() == 4) {
                 this.fechaPublicacion = soloNumeros;
-            } 
+            }
             // Si no podemos determinar el año
             else {
                 this.fechaPublicacion = fechaPublicacion;
@@ -96,7 +98,9 @@ public class Libro {
         return id;
     }
 
-    public String getIsbn() { return isbn;}
+    public String getIsbn() {
+        return isbn;
+    }
 
     public String getTitulo() {
         return titulo;
@@ -127,7 +131,7 @@ public class Libro {
     }
 
     // Método para mostrar la información del libro como String
-        public String infoLibro() {
+    public String infoLibro() {
         return String.format(
                 "ISBN: %s\nTítulo: %s\nAutor(es): %s\nAño de publicación: %s\nNúmero de páginas: %s\nCategorías: %s\nDescripción: %s\n",
                 isbn, titulo, autores, fechaPublicacion, numeroPaginas, categoria, descripcion

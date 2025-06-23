@@ -19,8 +19,8 @@ import pi.biblioteca.presentador.PresentadorMostrarInfoLibro;
 
 public class ModificarInfoActivity extends AppCompatActivity {
     private PresentadorMostrarInfoLibro presentadorMostrarInfoLibro;
-    private TextView tvInformacion, tvTitulo, tvAutor, tvFechaPublicacion, tvCategoria, tvNumeroPaginas, tvDescripcion;
-    private EditText etTitulo, etAutor, etFechaPublicacion, etCategoria, etNumeroPaginas, etDescripcion;
+    private TextView tvInformacion, tvTitulo, tvAutor, tvIsbn, tvFechaPublicacion, tvCategoria, tvNumeroPaginas, tvDescripcion;
+    private EditText etTitulo, etAutor, etIsbn, etFechaPublicacion, etCategoria, etNumeroPaginas, etDescripcion;
     private Button btnGuardarLibro, btnEliminarLibro;
     private CheckBox chbLibrosNoLeidos, chbLibrosPrestados, chbLibrosPorComprar;
 
@@ -49,6 +49,7 @@ public class ModificarInfoActivity extends AppCompatActivity {
         tvInformacion = findViewById(R.id.tvInformacion);
         tvTitulo = findViewById(R.id.tvTitulo);
         tvAutor = findViewById(R.id.tvAutor);
+        tvIsbn = findViewById(R.id.tvIsbn);
         tvFechaPublicacion = findViewById(R.id.tvFechaPublicacion);
         tvCategoria = findViewById(R.id.tvCategoria);
         tvNumeroPaginas = findViewById(R.id.tvNumeroPaginas);
@@ -56,6 +57,7 @@ public class ModificarInfoActivity extends AppCompatActivity {
 
         etTitulo = findViewById(R.id.etTitulo);
         etAutor = findViewById(R.id.etAutor);
+        etIsbn = findViewById(R.id.etIsbn);
         etFechaPublicacion = findViewById(R.id.etFechaPublicacion);
         etCategoria = findViewById(R.id.etCategoria);
         etNumeroPaginas = findViewById(R.id.etNumeroPaginas);
@@ -87,6 +89,7 @@ public class ModificarInfoActivity extends AppCompatActivity {
     public void mostrarInformacionLibro(Libro libro) {
         etTitulo.setText(libro.getTitulo());
         etAutor.setText(libro.getAutores());
+        etIsbn.setText(libro.getIsbn());
         etFechaPublicacion.setText(libro.getFechaPublicacion());
         etCategoria.setText(libro.getCategoria());
         etNumeroPaginas.setText(libro.getNumeroPaginas());
@@ -108,6 +111,7 @@ public class ModificarInfoActivity extends AppCompatActivity {
        if (libro != null) {
             libro.setTitulo(etTitulo.getText().toString().trim());
             libro.setAutores(etAutor.getText().toString().trim());
+            libro.setIsbn(etIsbn.getText().toString().trim());
             libro.setFechaPublicacion(etFechaPublicacion.getText().toString().trim());
             libro.setCategoria(etCategoria.getText().toString().trim());
             libro.setNumeroPaginas(etNumeroPaginas.getText().toString().trim());

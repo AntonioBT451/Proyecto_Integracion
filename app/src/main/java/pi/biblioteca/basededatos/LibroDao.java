@@ -37,6 +37,10 @@ public interface LibroDao {
     @Query("SELECT * FROM libros WHERE autores LIKE '%' || :query || '%'")
     List<Libro> buscarPorAutor(String query);
 
+    // Buscar libros por ISBN
+    @Query("SELECT * FROM libros WHERE isbn LIKE '%' || :query || '%'")
+    List<Libro> buscarPorIsbn(String query);
+
     // Buscar libros por año (fecha de publicación)
     @Query("SELECT * FROM libros WHERE fechaPublicacion LIKE '%' || :query || '%'")
     List<Libro> buscarPorAno(String query);

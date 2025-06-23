@@ -60,6 +60,21 @@
                 android:textColor="#FFFFFF" />
 
             <TextView
+                android:id="@+id/tvIsbn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ISBN:"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etIsbn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:textColor="#FFFFFF" />
+
+            <TextView
                 android:id="@+id/tvFechaPublicacion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

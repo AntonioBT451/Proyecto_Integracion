@@ -66,6 +66,7 @@ public class PresentadorMostrarInfoLibro {
                                 vistaMostrarInfoActivity.runOnUiThread(() -> vistaMostrarInfoActivity.mostrarInformacionLibro(
                                         libroObtenido.getTitulo(),
                                         libroObtenido.getAutores(),
+                                        libroObtenido.getIsbn(),
                                         libroObtenido.getFechaPublicacion(),
                                         libroObtenido.getCategoria(),
                                         String.valueOf(libroObtenido.getNumeroPaginas()),
@@ -104,6 +105,7 @@ public class PresentadorMostrarInfoLibro {
                 vistaMostrarInfoActivity.runOnUiThread(() -> vistaMostrarInfoActivity.mostrarInformacionLibro(
                         libroObtenido.getTitulo(),
                         libroObtenido.getAutores(),
+                        libroObtenido.getIsbn(),
                         libroObtenido.getFechaPublicacion(),
                         libroObtenido.getCategoria(),
                         String.valueOf(libroObtenido.getNumeroPaginas()),

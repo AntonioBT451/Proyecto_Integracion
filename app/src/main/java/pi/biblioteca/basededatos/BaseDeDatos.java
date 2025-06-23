@@ -10,7 +10,7 @@ import android.content.Context;
 
 import pi.biblioteca.modelo.Libro;
 
-@Database(entities = {Libro.class, Lista.class, LibroLista.class}, version = 1, 
+@Database(entities = {Libro.class, Lista.class, LibroLista.class}, version = 2,
           exportSchema = false)
 public abstract class BaseDeDatos extends RoomDatabase{
     public abstract LibroDao libroDao();
