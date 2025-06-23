@@ -135,6 +135,17 @@
         android:layout_above="@id/contenedorBotonesInferior"
         android:visibility="invisible"/>
 
+    <TextView
+        android:id="@+id/tvListaVacia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Aún no se han agregado \n libros a esta lista"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
     <!-- Contenedor para los botones inferiores (después de seleccionar) -->
     <LinearLayout
         android:id="@+id/contenedorBotonesInferior"

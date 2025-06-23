@@ -21,7 +21,7 @@ public class ListasActivity extends AppCompatActivity implements LibroAdaptador.
     private LibroRepositorio repositorio;
     private Button btnLibrosNoLeidos, btnLibrosPrestados, btnLibrosPorComprar, btnBuscar;
     private Button btnLibrosNoLeidosInicial, btnLibrosPrestadosInicial, btnLibrosPorComprarInicial, btnBuscarInicial;
-    private TextView tvTituloLista;
+    private TextView tvTituloLista, tvListaVacia;
     private LinearLayout llHeader, botonesIniciales, contenedorBotonesInferior;
 
     @Override
@@ -52,6 +52,7 @@ public class ListasActivity extends AppCompatActivity implements LibroAdaptador.
         btnBuscarInicial = findViewById(R.id.btnBuscarLibroInicial);
         
         tvTituloLista = findViewById(R.id.tv_tituloLista);
+        tvListaVacia = findViewById(R.id.tvListaVacia);
         llHeader = findViewById(R.id.headerLayout);
         
         // Contenedores
@@ -139,5 +140,16 @@ public class ListasActivity extends AppCompatActivity implements LibroAdaptador.
     private void mostrarLibrosDeLista(String nombreLista) {
         List<Libro> libros = repositorio.obtenerLibrosPorLista(nombreLista);
         adaptador.actualizarLista(libros);
+
+        // Mostrar u ocultar el mensaje según corresponda
+        if (libros.isEmpty()) {
+            tvListaVacia.setVisibility(View.VISIBLE);
+            rvLibrosLista.setVisibility(View.GONE);
+            llHeader.setVisibility(View.GONE);
+        } else {
+            tvListaVacia.setVisibility(View.GONE);
+            rvLibrosLista.setVisibility(View.VISIBLE);
+            llHeader.setVisibility(View.VISIBLE);
+        }
     }
 }
