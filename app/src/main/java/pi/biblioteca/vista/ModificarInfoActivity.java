@@ -23,6 +23,7 @@ public class ModificarInfoActivity extends AppCompatActivity {
     private EditText etTitulo, etAutor, etIsbn, etFechaPublicacion, etCategoria, etNumeroPaginas, etDescripcion;
     private Button btnGuardarLibro, btnEliminarLibro;
     private CheckBox chbLibrosNoLeidos, chbLibrosPrestados, chbLibrosPorComprar;
+    private boolean noLeidos, prestados, porComprar;
 
     private Libro libro;
     private boolean modoEdicion;
@@ -85,6 +86,11 @@ public class ModificarInfoActivity extends AppCompatActivity {
     }
 
     public void mostrarInformacionLibro(Libro libro) {
+        // Estado por defecto de las listas
+        noLeidos = false;
+        prestados = false;
+        porComprar = false;
+
         etTitulo.setText(libro.getTitulo());
         etAutor.setText(libro.getAutores());
         etIsbn.setText(libro.getIsbn());
@@ -95,13 +101,16 @@ public class ModificarInfoActivity extends AppCompatActivity {
 
         LibroRepositorio repositorio = new LibroRepositorio(this);
         if (repositorio.isLibroEnLista(libro.getId(), "No leídos")) {
-            chbLibrosNoLeidos.setChecked(true); 
+            chbLibrosNoLeidos.setChecked(true);
+            noLeidos = true;
         }
         if (repositorio.isLibroEnLista(libro.getId(), "Prestados")) {
             chbLibrosPrestados.setChecked(true);
+            prestados = true;
         }
         if (repositorio.isLibroEnLista(libro.getId(), "Por comprar")) {
             chbLibrosPorComprar.setChecked(true);
+            porComprar = true;
         }
     }
 
@@ -191,6 +200,10 @@ public class ModificarInfoActivity extends AppCompatActivity {
 
     // Por confirmar si dejarlo
     private void confirmarActualizacion() {
+        if (!validarListas()) {
+            return; // Detiene la ejecución si la lógica no se cumple
+        }
+
         androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this, R.style.AlertDialogCustom)
             .setTitle("Confirmar actualización")
             .setMessage("¿Está seguro de actualizar la información del libro?")
@@ -222,5 +235,32 @@ public class ModificarInfoActivity extends AppCompatActivity {
                 Toast.makeText(this, "Error al eliminar el libro", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private boolean validarListas() {
+        boolean prestado = chbLibrosPrestados.isChecked();
+        boolean porComprar = chbLibrosPorComprar.isChecked();
+
+        // Regla: Un libro no puede estar tanto en 'Prestados' como en 'Por comprar'
+        if (prestado && porComprar) {
+            mostrarDialogoListas("Un libro no puede estar en 'Prestados' y 'Por comprar' al mismo tiempo.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void mostrarDialogoListas(String mensaje) {
+        new androidx.appcompat.app.AlertDialog.Builder(this, R.style.AlertDialogCustom)
+                .setTitle("¡Alerta!")
+                .setMessage(mensaje)
+                .setCancelable(false)
+                .setPositiveButton("Aceptar", (dialog, which) -> {
+                    // Restaurar los checkboxes al estado original
+                    chbLibrosNoLeidos.setChecked(noLeidos);
+                    chbLibrosPrestados.setChecked(prestados);
+                    chbLibrosPorComprar.setChecked(porComprar);
+                })
+                .show();
     }
 }

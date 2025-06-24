@@ -14,13 +14,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import pi.biblioteca.R;
 import pi.biblioteca.basededatos.LibroRepositorio;
 import pi.biblioteca.modelo.Libro;
-import pi.biblioteca.presentador.PresentadorMostrarInfoLibro;
 
 public class ModificarInfoListasActivity extends AppCompatActivity {
     private TextView tvInformacion, tvTitulo, tvAutor, tvFechaPublicacion;
     private EditText etTitulo, etAutor, etFechaPublicacion;
     private Button btnGuardarLibro;
     private CheckBox chbLibrosNoLeidos, chbLibrosPrestados, chbLibrosPorComprar;
+    private boolean noLeidos, prestados, porComprar;
 
     private Libro libro;
 
@@ -60,19 +60,28 @@ public class ModificarInfoListasActivity extends AppCompatActivity {
     }
 
     public void mostrarInformacionLibro(Libro libro) {
+        // Estado por defecto de las listas
+        noLeidos = false;
+        prestados = false;
+        porComprar = false;
+
         etTitulo.setText(libro.getTitulo());
         etAutor.setText(libro.getAutores());
         etFechaPublicacion.setText(libro.getFechaPublicacion());
 
+        // Estado incial de las listas para un libro
         LibroRepositorio repositorio = new LibroRepositorio(this);
         if (repositorio.isLibroEnLista(libro.getId(), "No leídos")) {
             chbLibrosNoLeidos.setChecked(true);
+            noLeidos = true;
         }
         if (repositorio.isLibroEnLista(libro.getId(), "Prestados")) {
             chbLibrosPrestados.setChecked(true);
+            prestados = true;
         }
         if (repositorio.isLibroEnLista(libro.getId(), "Por comprar")) {
             chbLibrosPorComprar.setChecked(true);
+            porComprar = true;
         }
     }
 
@@ -137,10 +146,51 @@ public class ModificarInfoListasActivity extends AppCompatActivity {
 
     // Ventana emergente de confirmación para actualizar las listas un libro
     private void confirmarActualizacion() {
-        androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this, R.style.AlertDialogCustom)                .setTitle("Confirmar actualización")
+        if (!validarListas()) {
+            return; // Detiene la ejecución si la lógica no se cumple
+        }
+
+        androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this, R.style.AlertDialogCustom)
+                .setTitle("Confirmar actualización")
                 .setMessage("¿Está seguro de actualizar las listas del libro?")
                 .setPositiveButton("Sí", (d, which) -> actualizarLibro())
                 .setNegativeButton("No", null)
                 .show();
+    }
+
+    private boolean validarListas() {
+        boolean prestado = chbLibrosPrestados.isChecked();
+        boolean porComprar = chbLibrosPorComprar.isChecked();
+
+        // Regla: Un libro no puede estar tanto en 'Prestados' como en 'Por comprar'
+        if (prestado && porComprar) {
+            mostrarDialogoListas("Un libro no puede estar en 'Prestados' y 'Por comprar' al mismo tiempo.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void mostrarDialogoListas(String mensaje) {
+        new androidx.appcompat.app.AlertDialog.Builder(this, R.style.AlertDialogCustom)
+                .setTitle("¡Alerta!")
+                .setMessage(mensaje)
+                .setCancelable(false)
+                .setPositiveButton("Aceptar", (dialog, which) -> {
+                    // Restaurar los checkboxes al estado original
+                    chbLibrosNoLeidos.setChecked(noLeidos);
+                    chbLibrosPrestados.setChecked(prestados);
+                    chbLibrosPorComprar.setChecked(porComprar);
+                })
+                .show();
+    }
+
+    private void mostrarToastListas(String mensaje) {
+        Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
+
+        // Restaurar checkboxes a su estado original
+        chbLibrosNoLeidos.setChecked(noLeidos);
+        chbLibrosPrestados.setChecked(prestados);
+        chbLibrosPorComprar.setChecked(porComprar);
     }
 }

@@ -25,6 +25,7 @@ public class MostrarInfoActivity extends AppCompatActivity {
     private EditText etTitulo, etAutor, etIsbn, etFechaPublicacion, etCategoria, etNumeroPaginas, etDescripcion;
     private Button btnGuardarLibro;
     private CheckBox chbLibrosNoLeidos, chbLibrosPrestados, chbLibrosPorComprar;
+    private boolean noLeidos, prestados, porComprar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,11 @@ public class MostrarInfoActivity extends AppCompatActivity {
     }
 
     public void mostrarInformacionLibro(String titulo, String autores, String isbn, String fechaPublicacion, String categoria, String numeroPaginas, String descripcion) {
+        // Estado por defecto de las listas
+        noLeidos = false;
+        prestados = false;
+        porComprar = false;
+
         etTitulo.setText(titulo);
         etAutor.setText(autores);
         etIsbn.setText(isbn);
@@ -134,6 +140,10 @@ public class MostrarInfoActivity extends AppCompatActivity {
 
     // Ventana emergente de confirmación para guardar un libro
     private void confirmarRegistro() {
+        if (!validarListas()) {
+            return; // Detiene la ejecución si la lógica no se cumple
+        }
+
         androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this, R.style.AlertDialogCustom)
                 .setTitle("Confirmar registro")
                 .setMessage("¿Registrar libro " + etTitulo.getText() + "?")
@@ -144,5 +154,32 @@ public class MostrarInfoActivity extends AppCompatActivity {
 
     public void mostrarMensaje(String mensaje) {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean validarListas() {
+        boolean prestado = chbLibrosPrestados.isChecked();
+        boolean porComprar = chbLibrosPorComprar.isChecked();
+
+        // Regla: Un libro no puede estar tanto en 'Prestados' como en 'Por comprar'
+        if (prestado && porComprar) {
+            mostrarDialogoListas("Un libro no puede estar en 'Prestados' y 'Por comprar' al mismo tiempo.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void mostrarDialogoListas(String mensaje) {
+        new androidx.appcompat.app.AlertDialog.Builder(this, R.style.AlertDialogCustom)
+                .setTitle("¡Alerta!")
+                .setMessage(mensaje)
+                .setCancelable(false)
+                .setPositiveButton("Aceptar", (dialog, which) -> {
+                    // Restaurar los checkboxes al estado original
+                    chbLibrosNoLeidos.setChecked(noLeidos);
+                    chbLibrosPrestados.setChecked(prestados);
+                    chbLibrosPorComprar.setChecked(porComprar);
+                })
+                .show();
     }
 }
