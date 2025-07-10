@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import pi.biblioteca.R;
 import pi.biblioteca.basededatos.LibroRepositorio;
-import pi.biblioteca.modelo.Libro;
+import pi.biblioteca.basededatos.Libro;
 
 public class ListasActivity extends AppCompatActivity implements LibroAdaptador.OnLibroClickListener {
     private RecyclerView rvLibrosLista;
@@ -30,8 +30,8 @@ public class ListasActivity extends AppCompatActivity implements LibroAdaptador.
         setContentView(R.layout.activity_listas);
 
         inicializarVistas();
-        configurarRecyclerView();
         configurarBotones();
+        configurarRecyclerView();
 
         repositorio = new LibroRepositorio(this);
     }
@@ -67,20 +67,6 @@ public class ListasActivity extends AppCompatActivity implements LibroAdaptador.
         rvLibrosLista.setVisibility(View.INVISIBLE);
     }
 
-    private void configurarRecyclerView() {
-        adaptador = new LibroAdaptador(this);
-        rvLibrosLista.setLayoutManager(new LinearLayoutManager(this));
-        rvLibrosLista.setAdapter(adaptador);
-    }
-
-    @Override
-    public void onLibroClick(Libro libro) {
-        // Handle book click event
-        Intent intent = new Intent(this, ModificarInfoListasActivity.class);
-        intent.putExtra("libro_id", libro.getId());
-        startActivity(intent);
-    }
-
     private void configurarBotones() {
         // Configurar botones inferiores
         btnLibrosNoLeidos.setOnClickListener(v -> {
@@ -98,7 +84,7 @@ public class ListasActivity extends AppCompatActivity implements LibroAdaptador.
         btnBuscar.setOnClickListener(v -> {
             abrirBusquedaLibros();
         });
-        
+
         // Configurar botones iniciales (centrados)
         btnLibrosNoLeidosInicial.setOnClickListener(v -> {
             mostrarListaSeleccionada("Libros no leídos", "No leídos");
@@ -111,13 +97,26 @@ public class ListasActivity extends AppCompatActivity implements LibroAdaptador.
         btnLibrosPorComprarInicial.setOnClickListener(v -> {
             mostrarListaSeleccionada("Libros por comprar", "Por comprar");
         });
-        
+
         // Configurar botón de búsqueda inicial
         btnBuscarInicial.setOnClickListener(v -> {
             abrirBusquedaLibros();
         });
     }
-    
+
+    private void configurarRecyclerView() {
+        adaptador = new LibroAdaptador(this);
+        rvLibrosLista.setLayoutManager(new LinearLayoutManager(this));
+        rvLibrosLista.setAdapter(adaptador);
+    }
+
+    @Override
+    public void onLibroClick(Libro libro) {
+        Intent intent = new Intent(this, ModificarInfoListasActivity.class);
+        intent.putExtra("libro_id", libro.getId());
+        startActivity(intent);
+    }
+
     // Método para abrir la actividad de búsqueda
     private void abrirBusquedaLibros() {
         Intent intent = new Intent(ListasActivity.this, BuscarLibroActivity.class);

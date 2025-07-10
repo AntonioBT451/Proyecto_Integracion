@@ -1,8 +1,6 @@
 package pi.biblioteca.presentador;
 
-import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
-import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
 
 import pi.biblioteca.modelo.ValidadorISBN;
@@ -20,19 +18,12 @@ public class PresentadorISBN {
     }
 
     public void iniciarEscaneo() {
-        /*
-        GmsBarcodeScannerOptions options = new GmsBarcodeScannerOptions.Builder()
-                .setBarcodeFormats(Barcode.TYPE_ISBN)
-                .build();
-         */
-
         escaner = GmsBarcodeScanning.getClient(vistaRegistrarLibroActivity.getApplicationContext());
 
         escaner.startScan()
                 .addOnSuccessListener(barcode -> {
                     String codigoISBN = barcode.getRawValue();
-                    //vistaRegistrarLibroActivity.mostrarCodigoISBN(codigoISBN);
-                    if(validarISBN(codigoISBN)){
+                    if (validarISBN(codigoISBN)) {
                         vistaRegistrarLibroActivity.registrarConISBN(codigoISBN);
                     } else {
                         vistaRegistrarLibroActivity.mostrarMensaje("Código ISBN invalido");
@@ -51,9 +42,8 @@ public class PresentadorISBN {
     }
 
     public Boolean validarISBN(String isbn) {
-        Boolean isISBN = null;
+        Boolean isISBN;
         if (modeloValidadorISBN.validarISBN(isbn)) {
-            vistaRegistrarLibroActivity.mostrarCodigoISBN(isbn);
             isISBN = true;
         } else {
             vistaRegistrarLibroActivity.mostrarMensaje("ISBN inválido");

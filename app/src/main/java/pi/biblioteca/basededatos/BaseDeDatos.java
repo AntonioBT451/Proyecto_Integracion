@@ -8,13 +8,13 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import android.content.Context;
 
-import pi.biblioteca.modelo.Libro;
-
-@Database(entities = {Libro.class, Lista.class, LibroLista.class}, version = 2,
-          exportSchema = false)
-public abstract class BaseDeDatos extends RoomDatabase{
+@Database(entities = {Libro.class, Lista.class, LibroLista.class}, version = 3,
+        exportSchema = false)
+public abstract class BaseDeDatos extends RoomDatabase {
     public abstract LibroDao libroDao();
+
     public abstract ListaDao listaDao();
+
     public abstract LibroListaDao libroListaDao();
 
     private static volatile BaseDeDatos instancia;

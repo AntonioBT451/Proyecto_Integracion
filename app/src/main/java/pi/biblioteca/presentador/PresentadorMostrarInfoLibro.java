@@ -8,23 +8,20 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pi.biblioteca.modelo.Libro;
+import pi.biblioteca.basededatos.Libro;
 import pi.biblioteca.basededatos.LibroRepositorio;
 import pi.biblioteca.vista.MostrarInfoActivity;
 import pi.biblioteca.modelo.ProcesadorOpenCV;
 import pi.biblioteca.modelo.ProcesadorOCR;
-import pi.biblioteca.modelo.CorrectorOrtografico;
 import pi.biblioteca.modelo.ConsultorAPIs;
 
 public class PresentadorMostrarInfoLibro {
     private final MostrarInfoActivity vistaMostrarInfoActivity;
     private final ProcesadorOpenCV procesadorOpenCV;
     private final ProcesadorOCR procesadorOCR;
-    private final CorrectorOrtografico correctorOrtografico;
     private final ConsultorAPIs consultorAPIs;
     private final Uri uriImagen;
     private final ExecutorService executorService;
@@ -35,7 +32,6 @@ public class PresentadorMostrarInfoLibro {
         this.uriImagen = uriImagen;
         this.procesadorOpenCV = new ProcesadorOpenCV();
         this.procesadorOCR = new ProcesadorOCR();
-        this.correctorOrtografico = new CorrectorOrtografico();
         this.consultorAPIs = new ConsultorAPIs();
         this.executorService = Executors.newSingleThreadExecutor();
         this.libro = null;
@@ -59,6 +55,7 @@ public class PresentadorMostrarInfoLibro {
                     public void onTextoDetectado(String textoDetectado) {
                         Log.d("PresentadorMostrarInfoLibro", "Texto detectado de la imagen: " + textoDetectado);
 
+                        // Se obtiene información desde las APIs
                         consultorAPIs.buscarLibro(textoDetectado, false, vistaMostrarInfoActivity, libroObtenido -> {
                             if (libroObtenido == null) {
                                 vistaMostrarInfoActivity.mostrarMensaje("No se ha encontrado el libro");
@@ -72,8 +69,9 @@ public class PresentadorMostrarInfoLibro {
                                         String.valueOf(libroObtenido.getNumeroPaginas()),
                                         libroObtenido.getDescripcion()
                                 ));
+
                                 libro = libroObtenido;
-                                vistaMostrarInfoActivity.mostrarMensaje("Libro encontrado\nCoincidencia: " + (int)(libroObtenido.getSimilitudPuntaje() * 100) + "%");
+                                vistaMostrarInfoActivity.mostrarMensaje("¡Libro encontrado!\nCoincidencia: " + (int) (libroObtenido.getSimilitudPuntaje() * 100) + "%");
                                 Log.d("PresentadorMostrarInfoLibro", "Información del libro mostrada con éxito.");
                             }
                         });
@@ -86,7 +84,7 @@ public class PresentadorMostrarInfoLibro {
 
                     @Override
                     public void onTextoNoDetectado() {
-                        vistaMostrarInfoActivity.mostrarMensaje("No se ha podido reconocer el texto.");
+                        vistaMostrarInfoActivity.mostrarMensaje("No se ha podido reconocer el texto");
                     }
                 });
             } catch (Exception e) {
@@ -111,8 +109,10 @@ public class PresentadorMostrarInfoLibro {
                         String.valueOf(libroObtenido.getNumeroPaginas()),
                         libroObtenido.getDescripcion()
                 ));
+
                 libro = libroObtenido;
-                vistaMostrarInfoActivity.mostrarMensaje("Libro encontrado\nISBN: " + isbn);
+                vistaMostrarInfoActivity.mostrarMensaje("¡Libro encontrado!");
+                Log.d("PresentadorMostrarInfoLibro", "Información del libro mostrada con éxito.");
             }
         });
     }
@@ -121,7 +121,13 @@ public class PresentadorMostrarInfoLibro {
         try {
             if (libro != null) {
                 LibroRepositorio repositorio = new LibroRepositorio(vistaMostrarInfoActivity);
-                repositorio.insertarLibro(libro);
+                Boolean isLibroRegistrado = repositorio.insertarLibro(libro);
+
+                if (!isLibroRegistrado) {
+                    vistaMostrarInfoActivity.cerrarPantalla();
+                    vistaMostrarInfoActivity.mostrarMensaje("El libro ya está registrado");
+                    return;
+                }
 
                 // Se recuperar el libro insertado (con ID asignado)
                 Libro libroInsertado = repositorio.buscarPorTitulo(libro.getTitulo()).get(0);
@@ -130,10 +136,10 @@ public class PresentadorMostrarInfoLibro {
                 guardarLibroEnLista(libroInsertado, repositorio);
 
                 vistaMostrarInfoActivity.limpiarPantalla();
-                vistaMostrarInfoActivity.mostrarMensaje("Libro guardado exitosamente.");
                 vistaMostrarInfoActivity.cerrarPantalla();
+                vistaMostrarInfoActivity.mostrarMensaje("Libro guardado exitosamente");
             } else {
-                vistaMostrarInfoActivity.mostrarMensaje("No se ha podido guardar el libro.");
+                vistaMostrarInfoActivity.mostrarMensaje("No se ha podido guardar el libro");
             }
         } catch (Exception e) {
             Log.e("PresentadorMostrarInfoLibro", "Error al guardar el libro: " + e.getMessage());

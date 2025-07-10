@@ -1,16 +1,11 @@
 package pi.biblioteca.vista;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +32,7 @@ public class MostrarInfoActivity extends AppCompatActivity {
         String codigoISBN = getIntent().getStringExtra("codigoISBN");
 
         inicializarVistas();
+        configurarBotones();
 
         if (uriImagenString != null) {
             Uri uriImagen = Uri.parse(uriImagenString);
@@ -71,20 +67,17 @@ public class MostrarInfoActivity extends AppCompatActivity {
         chbLibrosNoLeidos = findViewById(R.id.chbLibrosNoLeidos);
         chbLibrosPrestados = findViewById(R.id.chbLibrosPrestados);
         chbLibrosPorComprar = findViewById(R.id.chbLibrosPorComprar);
+    }
 
+    private void configurarBotones() {
         btnGuardarLibro = findViewById(R.id.btnGuardarLibro);
-        //btnGuardarLibro.setOnClickListener(v -> presentadorMostrarInfoLibro.guardarLibro());
         btnGuardarLibro.setOnClickListener(v -> {
-            if(validarCampos()){
+            if (validarCampos()) {
                 confirmarRegistro();
             } else {
                 Toast.makeText(this, "Por favor, ingrese el titulo u autor del libro", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public void cerrarPantalla() {
-        finish();
     }
 
     public void mostrarInformacionLibro(String titulo, String autores, String isbn, String fechaPublicacion, String categoria, String numeroPaginas, String descripcion) {
@@ -102,29 +95,16 @@ public class MostrarInfoActivity extends AppCompatActivity {
         etDescripcion.setText(descripcion);
     }
 
-    public Boolean estaSeleccionadaNoLeidos(){
+    public Boolean estaSeleccionadaNoLeidos() {
         return chbLibrosNoLeidos.isChecked();
     }
 
-    public Boolean estaSeleccionadaPrestados(){
+    public Boolean estaSeleccionadaPrestados() {
         return chbLibrosPrestados.isChecked();
     }
 
-    public Boolean estaSeleccionadaPorComprar(){
+    public Boolean estaSeleccionadaPorComprar() {
         return chbLibrosPorComprar.isChecked();
-    }
-
-    public void limpiarPantalla(){
-        etTitulo.setText("");
-        etAutor.setText("");
-        etIsbn.setText("");
-        etFechaPublicacion.setText("");
-        etCategoria.setText("");
-        etNumeroPaginas.setText("");
-        etDescripcion.setText("");
-        chbLibrosPrestados.setChecked(false);
-        chbLibrosPorComprar.setChecked(false);
-        chbLibrosNoLeidos.setChecked(false);
     }
 
     private boolean validarCampos() {
@@ -141,7 +121,7 @@ public class MostrarInfoActivity extends AppCompatActivity {
     // Ventana emergente de confirmación para guardar un libro
     private void confirmarRegistro() {
         if (!validarListas()) {
-            return; // Detiene la ejecución si la lógica no se cumple
+            return;
         }
 
         androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this, R.style.AlertDialogCustom)
@@ -150,10 +130,6 @@ public class MostrarInfoActivity extends AppCompatActivity {
                 .setPositiveButton("Sí", (d, which) -> presentadorMostrarInfoLibro.guardarLibro())
                 .setNegativeButton("No", null)
                 .show();
-    }
-
-    public void mostrarMensaje(String mensaje) {
-        Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
     }
 
     private boolean validarListas() {
@@ -181,5 +157,26 @@ public class MostrarInfoActivity extends AppCompatActivity {
                     chbLibrosPorComprar.setChecked(porComprar);
                 })
                 .show();
+    }
+
+    public void mostrarMensaje(String mensaje) {
+        Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
+    }
+
+    public void limpiarPantalla() {
+        etTitulo.setText("");
+        etAutor.setText("");
+        etIsbn.setText("");
+        etFechaPublicacion.setText("");
+        etCategoria.setText("");
+        etNumeroPaginas.setText("");
+        etDescripcion.setText("");
+        chbLibrosPrestados.setChecked(false);
+        chbLibrosPorComprar.setChecked(false);
+        chbLibrosNoLeidos.setChecked(false);
+    }
+
+    public void cerrarPantalla() {
+        finish();
     }
 }

@@ -1,12 +1,9 @@
 package pi.biblioteca.basededatos;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.List;
-
-import pi.biblioteca.modelo.Libro;
 
 public class LibroRepositorio {
     private LibroDao libroDao;
@@ -37,12 +34,17 @@ public class LibroRepositorio {
     }
 
     // Métodos para libros
-    public void insertarLibro(Libro libro) {
+    public boolean insertarLibro(Libro libro) {
         int existe = libroDao.verificarExistencia(libro.getTitulo(), libro.getAutores());
         if (existe == 0) {
             libroDao.insertarLibro(libro);
+            Log.d("LibroRepositorio", "Libro registrado en la base de datos.");
+
+            return true;
         } else {
             Log.d("LibroRepositorio", "El libro ya existe en la base de datos.");
+
+            return false;
         }
     }
 
@@ -54,18 +56,15 @@ public class LibroRepositorio {
             if (libroDao.verificarExistencia(libro.getTitulo(), libro.getAutores()) > 0) {
                 Log.d("LibroRepositorio", "El libro existe en la base de datos.");
 
-                // Libro libroActualizado = libroDao.obtenerLibroPorId(libro.getId());
-                // if (libroActualizado = libro) {
-                //     Log.d("LibroRepositorio", "El libro ha sido actualizado.");
-                //     return true;
-                // }
                 return true;
             }
 
             Log.d("LibroRepositorio", "El libro no ha sido actualizado.");
+
             return false;
         } catch (Exception e) {
             Log.e("LibroRepositorio", "Error al actualizar el libro: " + e.getMessage());
+
             return false;
         }
     }
@@ -73,14 +72,17 @@ public class LibroRepositorio {
     public boolean eliminarLibro(Libro libro) {
         try {
             libroDao.eliminarLibro(libro);
-            
+
             // Verificar si el libro ha sido eliminado
             Libro libroVerificacion = libroDao.obtenerLibroPorId(libro.getId());
+
             if (libroVerificacion == null) {
                 Log.d("LibroRepositorio", "El libro ha sido eliminado correctamente.");
+
                 return true;
             } else {
                 Log.d("LibroRepositorio", "El libro no ha sido eliminado.");
+
                 return false;
             }
         } catch (Exception e) {
@@ -129,6 +131,7 @@ public class LibroRepositorio {
 
         if (libro == null) {
             Log.d("LibroRepositorio", "El libro no existe en la base de datos.");
+
             return;
         }
 

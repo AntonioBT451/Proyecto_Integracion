@@ -7,10 +7,9 @@ import androidx.room.RewriteQueriesToDropUnusedColumns;
 
 import java.util.List;
 
-import pi.biblioteca.modelo.Libro;
-
 @Dao
 public interface LibroListaDao {
+    // Insertar un libro a una lista
     @Insert
     void agregarLibroALista(LibroLista libroLista);
 
@@ -27,9 +26,5 @@ public interface LibroListaDao {
     @Query("SELECT l.* FROM libros l INNER JOIN libro_lista ll ON l.id = ll.libroId WHERE ll.listaId = :listaId")
     @RewriteQueriesToDropUnusedColumns
     List<Libro> obtenerLibrosPorLista(int listaId);
-
-    // Verificar si un libro está en una lista específica
-    @Query("SELECT COUNT(*) FROM libro_lista WHERE libroId = :libroId AND listaId = :listaId")
-    int verificarSiLibroEstaEnLista(int libroId, int listaId);
 
 }

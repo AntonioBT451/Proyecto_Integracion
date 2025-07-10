@@ -8,20 +8,21 @@ import androidx.room.Update;
 
 import java.util.List;
 
-import pi.biblioteca.modelo.Libro;
-
 @Dao
 public interface LibroDao {
     // Insertar un libro en la base de datos
     @Insert
     void insertarLibro(Libro libro);
 
+    // Verificar el registro de un libro mediante un titulo y autor
     @Query("SELECT COUNT(*) FROM libros WHERE titulo = :titulo AND autores = :autores")
     int verificarExistencia(String titulo, String autores);
 
+    // Actualización de la información de un libro
     @Update
     void actualizarLibro(Libro libro); // Devuelve el número de filas afectadas, o 0 si no se azactualizó nada
 
+    // Eliminar un libro de la base de datos
     @Delete
     void eliminarLibro(Libro libro);
 
@@ -45,16 +46,15 @@ public interface LibroDao {
     @Query("SELECT * FROM libros WHERE fechaPublicacion LIKE '%' || :query || '%'")
     List<Libro> buscarPorAno(String query);
 
-    // Buscar libros por título, autor o año combinados
+    // Buscar libros por título, autor o año combinados (sin tomar en cuenta acentos)
     @Query("SELECT * FROM libros WHERE " +
-           "LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(titulo, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE('%' || :query || '%', 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) OR " +
-           "LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(autores, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE('%' || :query || '%', 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) OR " +
-           "fechaPublicacion LIKE '%' || :query || '%'")
+            "LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(titulo, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE('%' || :query || '%', 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) OR " +
+            "LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(autores, 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) LIKE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE('%' || :query || '%', 'á', 'a'), 'é', 'e'), 'í', 'i'), 'ó', 'o'), 'ú', 'u')) OR " +
+            "fechaPublicacion LIKE '%' || :query || '%'")
     List<Libro> buscarPorTituloAutorAno(String query);
 
     // Obtener un libro por su ID
     @Query("SELECT * FROM libros WHERE id = :libroId")
     Libro obtenerLibroPorId(int libroId);
-
 
 }

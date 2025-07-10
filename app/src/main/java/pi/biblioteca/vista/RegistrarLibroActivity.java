@@ -34,7 +34,16 @@ public class RegistrarLibroActivity extends AppCompatActivity {
     private Button btnCapturaImagen, btnIngresarISBN, btnCapturaISBN;
 
     private Uri uriImagenCapturada;
-    private static final String CARPETA_IMAGENES = "PIBibliotecaPersonal"; // Nombre de la carpeta donde se guardarán las imágenes
+    private static final String CARPETA_IMAGENES = "PIBibliotecaPersonal"; // Nombre de la carpeta donde se guardan las imágenes de manera temporal
+
+    private final ActivityResultLauncher<Intent> capturaImagenLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    imagenConfirmada();
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +58,19 @@ public class RegistrarLibroActivity extends AppCompatActivity {
 
         presentadorISBN = new PresentadorISBN(this, GmsBarcodeScanning.getClient(this));
 
+        inicializarVistas();
+        configurarBotones();
+
+    }
+
+    private void inicializarVistas() {
         btnCapturaImagen = findViewById(R.id.botonCaptura);
         btnIngresarISBN = findViewById(R.id.btnIngresarISBN);
         btnCapturaISBN = findViewById(R.id.btnCapturaISBN);
         etISBN = findViewById(R.id.etISBN);
+    }
 
+    private void configurarBotones() {
         btnCapturaImagen.setOnClickListener(v -> iniciarCapturaImagen());
         btnCapturaISBN.setOnClickListener(v -> presentadorISBN.iniciarEscaneo());
         btnIngresarISBN.setOnClickListener(v -> {
@@ -67,8 +84,8 @@ public class RegistrarLibroActivity extends AppCompatActivity {
             crearArchivoImagenCapturada();
             if (uriImagenCapturada != null) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, uriImagenCapturada); // Se pasa la URI donde se guardará la imagen al tomar la foto
-                capturaImagenLauncher.launch(intent);  // Se inicia la cámara
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uriImagenCapturada); // Se pasa la URI donde se guarda
+                capturaImagenLauncher.launch(intent);                         // Se inicia la cámara
             } else {
                 Log.d("RegistrarLibroActivity", "No se pudo crear el archivo de imagen.");
             }
@@ -77,16 +94,6 @@ public class RegistrarLibroActivity extends AppCompatActivity {
         }
     }
 
-    private final ActivityResultLauncher<Intent> capturaImagenLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == RESULT_OK) {
-                    imagenConfirmada();
-                }
-            }
-    );
-
-    // Método para crear un archivo para guardar la imagen capturada del libro
     private void crearArchivoImagenCapturada() {
         // Se crea el directorio donde se guardarán las imágenes
         File mediaStorageDir = new File(getExternalFilesDir(null), CARPETA_IMAGENES);
@@ -111,22 +118,17 @@ public class RegistrarLibroActivity extends AppCompatActivity {
             intent.putExtra("uriImagen", uriImagenCapturada.toString());
             startActivity(intent);
         } else {
-            mostrarMensaje("Primero capture una imagen.");
+            mostrarMensaje("Primero capture una imagen");
         }
     }
 
-    public void  registrarConISBN(String codigoISBN) {
+    public void registrarConISBN(String codigoISBN) {
         if (presentadorISBN.validarISBN(codigoISBN)) {
             Intent intent = new Intent(this, MostrarInfoActivity.class);
             intent.putExtra("codigoISBN", codigoISBN);
             startActivity(intent);
             etISBN.setText("");
         }
-    }
-
-    public void mostrarCodigoISBN(String isbn) {
-        etISBN.setText(isbn);
-        Log.d("RegistrarLibroActivity", "ISBN válido: " + isbn);
     }
 
     public void mostrarMensaje(String mensaje) {

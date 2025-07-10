@@ -12,6 +12,7 @@ import pi.biblioteca.presentador.PresentadorMain;
 
 public class MainActivity extends Activity {
     private PresentadorMain presentadorMain;
+    private Button btnRegistrarLibro, btnBuscar, btnListas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,10 +21,17 @@ public class MainActivity extends Activity {
 
         presentadorMain = new PresentadorMain(this);
 
-        Button btnRegistrarLibro = findViewById(R.id.btn_registrar_libro);
-        Button btnBuscar = findViewById(R.id.btn_buscar);
-        Button btnListas = findViewById(R.id.btn_listas);
+        inicializarVistas();
+        configurarBotones();
+    }
 
+    private void inicializarVistas() {
+        btnRegistrarLibro = findViewById(R.id.btn_registrar_libro);
+        btnBuscar = findViewById(R.id.btn_buscar);
+        btnListas = findViewById(R.id.btn_listas);
+    }
+
+    private void configurarBotones() {
         btnRegistrarLibro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

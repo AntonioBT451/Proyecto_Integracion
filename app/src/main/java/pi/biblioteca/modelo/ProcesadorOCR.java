@@ -3,8 +3,6 @@ package pi.biblioteca.modelo;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
@@ -18,8 +16,10 @@ public class ProcesadorOCR {
 
     public interface ProcesamientoOCRCallback {
         void onTextoDetectado(String textoDetectado);
-        void onError(String mensajeError);
+
         void onTextoNoDetectado();
+
+        void onError(String mensajeError);
     }
 
     public void reconocerTexto(Bitmap BitmapImagen, ProcesamientoOCRCallback callback) {
@@ -30,6 +30,7 @@ public class ProcesadorOCR {
             // Crear el cliente TextRecognizer
             TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
 
+            // Reconocimiento del texto
             recognizer.process(inputImage)
                     .addOnSuccessListener(text -> {
                         StringBuilder textoResultante = new StringBuilder();
@@ -47,31 +48,11 @@ public class ProcesadorOCR {
                                 Log.d("ProcesadorOCR", "Línea: " + lineText);
                             }
                         }
-/*
-                        // Después de obtener el texto, se pasa a la corrección ortográfica
-                        CorrectorOrtografico correctorOrtografico = new CorrectorOrtografico();
-                        correctorOrtografico.corregirTexto(textoResultante.toString().toLowerCase(), new CorrectorOrtografico.CorrectorCallback() {
-                            @Override
-                            public void onTextoCorregido(String textoCorregido) {
-                                callback.onTextoDetectado(textoCorregido);
-                                Log.d("ProcesadorOCR", "Texto detectado: " + textoResultante);
-                                Log.d("ProcesadorOCR", "Texto corregido: " + textoCorregido);
-                            }
 
-                            @Override
-                            public void onError(String error) {
-                                callback.onError(error);
-                            }
-                        });
-
-                        Log.d("ProcesadorOCR", "Procesamiento de texto (OCR y ortografico) completado exitosamente");
-*/
-
-
-                        if(textoResultante.length() == 0){
+                        if (textoResultante.length() == 0) {
                             callback.onTextoNoDetectado();
+                            Log.d("ProcesadorOCR", "Texto no detectado");
                         } else {
-                            // Return the raw text without spelling correction
                             callback.onTextoDetectado(textoResultante.toString());
                             Log.d("ProcesadorOCR", "Texto detectado: " + textoResultante);
                         }

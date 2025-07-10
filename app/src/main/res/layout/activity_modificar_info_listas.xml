@@ -85,26 +85,26 @@
 
     <CheckBox
         android:id="@+id/chbLibrosNoLeidos"
-        android:text="Libros no leídos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
+        android:text="Libros no leídos"
         android:textColor="#FFFFFF" />
 
     <CheckBox
         android:id="@+id/chbLibrosPrestados"
-        android:text="Libros prestados"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
+        android:text="Libros prestados"
         android:textColor="#FFFFFF" />
 
     <CheckBox
         android:id="@+id/chbLibrosPorComprar"
-        android:text="Libros por comprar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
+        android:text="Libros por comprar"
         android:textColor="#FFFFFF" />
 
     <!-- Move button to bottom with weight -->
@@ -115,14 +115,14 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnActualizar"
-        app:cornerRadius="4dp"
-        android:text="Actualizar Información"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
         android:backgroundTint="@color/material_dynamic_primary40"
-        android:textColor="#FFFFFF" />
+        android:text="Actualizar Información"
+        android:textColor="#FFFFFF"
+        app:cornerRadius="4dp" />
 
 </LinearLayout>

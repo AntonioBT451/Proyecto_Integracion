@@ -1,4 +1,4 @@
-package pi.biblioteca.modelo;
+package pi.biblioteca.basededatos;
 
 import android.util.Log;
 
@@ -7,6 +7,9 @@ import org.apache.commons.text.similarity.JaroWinklerSimilarity;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Entity(tableName = "libros")
 public class Libro {
@@ -51,30 +54,34 @@ public class Libro {
     }
 
     public void setFechaPublicacion(String fechaPublicacion) {
-        if (fechaPublicacion == null || fechaPublicacion.equals("No disponible")) {
+        if (fechaPublicacion == null || fechaPublicacion.trim().isEmpty() || fechaPublicacion.equalsIgnoreCase("No disponible")) {
             this.fechaPublicacion = "No disponible";
             return;
         }
 
         try {
-            // Eliminar cualquier texto que no sea número
-            String soloNumeros = fechaPublicacion.replaceAll("[^0-9]", "");
+            // Buscar una secuencia de 4 dígitos consecutivos que podrían representar un año
+            Pattern pattern = Pattern.compile("(\\d{4})");
+            Matcher matcher = pattern.matcher(fechaPublicacion);
 
-            // Si tenemos una fecha completa (YYYYMMDD o YYYYMM)
-            if (soloNumeros.length() >= 4) {
-                this.fechaPublicacion = soloNumeros.substring(0, 4);
+            while (matcher.find()) {
+                String posibleAnio = matcher.group(1);
+                int anio = Integer.parseInt(posibleAnio);
+
+                // Consideramos años válidos entre 1000 y el año actual
+                int anioActual = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
+                if (anio >= 1000 && anio <= anioActual) {
+                    this.fechaPublicacion = String.valueOf(anio);
+                    return;
+                }
             }
-            // Si tenemos solo el año
-            else if (soloNumeros.length() == 4) {
-                this.fechaPublicacion = soloNumeros;
-            }
-            // Si no podemos determinar el año
-            else {
-                this.fechaPublicacion = fechaPublicacion;
-            }
+
+            // Si no se encuentra un año válido, guardar el valor original
+            this.fechaPublicacion = fechaPublicacion;
+
         } catch (Exception e) {
             this.fechaPublicacion = "No disponible";
-            Log.e("Libro", "Error al formatear fecha: " + fechaPublicacion, e);
+            Log.e("Libro", "Error al procesar la fecha: " + fechaPublicacion, e);
         }
     }
 
@@ -130,7 +137,7 @@ public class Libro {
         return similitudPuntaje;
     }
 
-    // Método para mostrar la información del libro como String
+    // Método para mostrar la información del libro
     public String infoLibro() {
         return String.format(
                 "ISBN: %s\nTítulo: %s\nAutor(es): %s\nAño de publicación: %s\nNúmero de páginas: %s\nCategorías: %s\nDescripción: %s\n",
@@ -138,6 +145,7 @@ public class Libro {
         );
     }
 
+    // Método para calcular la similitud del texto detectado con la información de las consultas en APIs
     public double calcularSimilitud(String query, String text) {
         if (query == null || text == null) {
             return 0.0;

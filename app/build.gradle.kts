@@ -35,19 +35,13 @@ dependencies {
     // Implementación de OpenCV
     implementation(project(":opencv"))
 
-    // Implementación de tesseract To use Standard variant:
-    implementation("cz.adaptech.tesseract4android:tesseract4android:4.7.0")
-
-    // To use OpenMP variant:
-    //implementation("cz.adaptech.tesseract4android:tesseract4android-openmp:4.7.0")
-
-    // Implementación Google MLKit. To recognize Latin script
+    // Implementación Google MLKit.
     implementation("com.google.mlkit:text-recognition:16.0.1")
 
     // Implementacion LenguajeTool
     implementation ("com.squareup.okhttp3:okhttp:4.10.0")
 
-    // Implementación para usar Google Books
+    // Implementación para usar Google Books y Open Library, para realizar solicituydes HTTP
     implementation("com.android.volley:volley:1.2.1")
 
     // Implementación para el comparador de textos

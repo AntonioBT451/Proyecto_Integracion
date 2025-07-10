@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 import pi.biblioteca.R;
-import pi.biblioteca.modelo.Libro;
+import pi.biblioteca.basededatos.Libro;
 
 public class LibroAdaptador extends RecyclerView.Adapter<LibroAdaptador.LibroViewHolder>{
     private List<Libro> libros = new ArrayList<>();
@@ -19,15 +19,15 @@ public class LibroAdaptador extends RecyclerView.Adapter<LibroAdaptador.LibroVie
         void onLibroClick(Libro libro);
     }
 
+    public LibroAdaptador(OnLibroClickListener listener) {
+        this.listener = listener;
+    }
+
     @NonNull
     @Override
     public LibroViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View vista = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_libro, parent, false);
         return new LibroViewHolder(vista);
-    }
-    
-    public LibroAdaptador(OnLibroClickListener listener) {
-        this.listener = listener;
     }
 
     @Override
@@ -37,7 +37,6 @@ public class LibroAdaptador extends RecyclerView.Adapter<LibroAdaptador.LibroVie
         holder.tvAutor.setText(libro.getAutores());
         holder.tvAno.setText(libro.getFechaPublicacion());
 
-        // Agregar click listener
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onLibroClick(libro);

@@ -4,20 +4,22 @@ import java.util.List;
 
 import android.content.Context;
 
-import pi.biblioteca.modelo.Libro;
+import pi.biblioteca.basededatos.Libro;
 import pi.biblioteca.basededatos.LibroRepositorio;
 
-public class BuscarLibroPresentador {
+public class PresentadorBuscarLibro {
     private IBuscarLibroVista vista;
     private LibroRepositorio repositorio;
 
     public interface IBuscarLibroVista {
         void mostrarResultados(List<Libro> libros);
+
         void mostrarMensaje(String mensaje);
+
         void ocultarTabla();
     }
 
-    public BuscarLibroPresentador(IBuscarLibroVista vista, Context context) {
+    public PresentadorBuscarLibro(IBuscarLibroVista vista, Context context) {
         this.vista = vista;
         this.repositorio = new LibroRepositorio(context);
     }
@@ -34,7 +36,7 @@ public class BuscarLibroPresentador {
         }
     }
 
-    public void buscarTodosLosLibros(){
+    public void buscarTodosLosLibros() {
         List<Libro> resultados = repositorio.obtenerTodosLosLibros();
         if (resultados.isEmpty()) {
             vista.ocultarTabla();

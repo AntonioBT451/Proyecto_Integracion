@@ -1,6 +1,5 @@
 package pi.biblioteca.vista;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -13,15 +12,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import pi.biblioteca.R;
 import pi.biblioteca.basededatos.LibroRepositorio;
-import pi.biblioteca.modelo.Libro;
+import pi.biblioteca.basededatos.Libro;
 
 public class ModificarInfoListasActivity extends AppCompatActivity {
     private TextView tvInformacion, tvTitulo, tvAutor, tvFechaPublicacion;
     private EditText etTitulo, etAutor, etFechaPublicacion;
     private Button btnGuardarLibro;
     private CheckBox chbLibrosNoLeidos, chbLibrosPrestados, chbLibrosPorComprar;
-    private boolean noLeidos, prestados, porComprar;
 
+    private boolean noLeidos, prestados, porComprar;
     private Libro libro;
 
     @Override
@@ -30,6 +29,7 @@ public class ModificarInfoListasActivity extends AppCompatActivity {
         setContentView(R.layout.activity_modificar_info_listas);
 
         inicializarVistas();
+        configurarBoton();
 
         int libroId = getIntent().getIntExtra("libro_id", -1);
         if (libroId != -1) {
@@ -54,6 +54,9 @@ public class ModificarInfoListasActivity extends AppCompatActivity {
         chbLibrosPorComprar = findViewById(R.id.chbLibrosPorComprar);
 
         btnGuardarLibro = findViewById(R.id.btnActualizar);
+    }
+
+    private void configurarBoton() {
         btnGuardarLibro.setOnClickListener(v -> {
             confirmarActualizacion();
         });
@@ -85,6 +88,20 @@ public class ModificarInfoListasActivity extends AppCompatActivity {
         }
     }
 
+    // Ventana emergente de confirmación para actualizar las listas un libro
+    private void confirmarActualizacion() {
+        if (!validarListas()) {
+            return;
+        }
+
+        androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this, R.style.AlertDialogCustom)
+                .setTitle("Confirmar actualización")
+                .setMessage("¿Está seguro de actualizar las listas del libro?")
+                .setPositiveButton("Sí", (d, which) -> actualizarLibro())
+                .setNegativeButton("No", null)
+                .show();
+    }
+
     private void actualizarLibro() {
         if (libro != null) {
 
@@ -93,7 +110,6 @@ public class ModificarInfoListasActivity extends AppCompatActivity {
             boolean listasActualizadas = actualizarListasLibro(repositorio);
 
             if (listasActualizadas) {
-                //actualizarListasLibro(repositorio);
                 Toast.makeText(this, "Listas del libro actualizadas correctamente", Toast.LENGTH_SHORT).show();
                 finish();
             } else {
@@ -144,20 +160,6 @@ public class ModificarInfoListasActivity extends AppCompatActivity {
         }
     }
 
-    // Ventana emergente de confirmación para actualizar las listas un libro
-    private void confirmarActualizacion() {
-        if (!validarListas()) {
-            return; // Detiene la ejecución si la lógica no se cumple
-        }
-
-        androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(this, R.style.AlertDialogCustom)
-                .setTitle("Confirmar actualización")
-                .setMessage("¿Está seguro de actualizar las listas del libro?")
-                .setPositiveButton("Sí", (d, which) -> actualizarLibro())
-                .setNegativeButton("No", null)
-                .show();
-    }
-
     private boolean validarListas() {
         boolean prestado = chbLibrosPrestados.isChecked();
         boolean porComprar = chbLibrosPorComprar.isChecked();
@@ -185,12 +187,4 @@ public class ModificarInfoListasActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void mostrarToastListas(String mensaje) {
-        Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
-
-        // Restaurar checkboxes a su estado original
-        chbLibrosNoLeidos.setChecked(noLeidos);
-        chbLibrosPrestados.setChecked(prestados);
-        chbLibrosPorComprar.setChecked(porComprar);
-    }
 }

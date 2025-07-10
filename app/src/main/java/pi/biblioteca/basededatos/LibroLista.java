@@ -6,19 +6,17 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 
-import pi.biblioteca.modelo.Libro;
-
 @Entity(
         tableName = "libro_lista",
         primaryKeys = {"libroId", "listaId"},
         indices = {
-            @Index("listaId")
+                @Index("listaId")
         },
         foreignKeys = {
-                @ForeignKey(entity = Libro.class, parentColumns = "id", childColumns = "libroId", 
-                    onDelete = CASCADE),
-                @ForeignKey(entity = Lista.class, parentColumns = "id", childColumns = "listaId", 
-                    onDelete = CASCADE)
+                @ForeignKey(entity = Libro.class, parentColumns = "id", childColumns = "libroId",
+                        onDelete = CASCADE),
+                @ForeignKey(entity = Lista.class, parentColumns = "id", childColumns = "listaId",
+                        onDelete = CASCADE)
         }
 )
 public class LibroLista {
@@ -30,6 +28,11 @@ public class LibroLista {
         this.listaId = listaId;
     }
 
-    public int getLibroId() { return libroId; }
-    public int getListaId() { return listaId; }
+    public int getLibroId() {
+        return libroId;
+    }
+
+    public int getListaId() {
+        return listaId;
+    }
 }

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/black"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     android:padding="16dp">
 
     <!-- Título principal -->
@@ -41,23 +40,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:justificationMode="inter_word"
         android:text="Tome una foto de la portada del libro en la que se muestren claramente el título y autor."
         android:textColor="#FFFFFF"
         android:textSize="14sp"
-        android:justificationMode="inter_word"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <!-- Botón Capturar Imagen -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/botonCaptura"
-        app:cornerRadius="4dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/material_dynamic_primary40"
         android:text="Capturar Imagen"
         android:textColor="#FFFFFF"
+        app:cornerRadius="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView3" />
@@ -81,23 +80,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:justificationMode="inter_word"
         android:text="Escanee el código ISBN que normalmente se encuentra en la parte posterior del libro."
         android:textColor="#FFFFFF"
         android:textSize="14sp"
-        android:justificationMode="inter_word"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <!-- Botón Escanear Código -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCapturaISBN"
-        app:cornerRadius="4dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/material_dynamic_primary40"
         android:text="Escanear Código"
         android:textColor="#FFFFFF"
+        app:cornerRadius="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
@@ -144,13 +143,13 @@
     <!-- Botón Ingresar ISBN -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnIngresarISBN"
-        app:cornerRadius="4dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/material_dynamic_primary40"
         android:text="Ingresar ISBN"
         android:textColor="#FFFFFF"
+        app:cornerRadius="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etISBN" />
