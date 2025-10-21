@@ -65,6 +65,16 @@ El proyecto está organizado de la siguiente manera:
 3.  **Sincronizar Gradle:**
     Asegúrate de que Gradle se sincronice correctamente. Si hay algún problema, verifica las dependencias en `build.gradle.kts` y `opencv/build.gradle`.
 
+## Configuración del proyecto
+
+Para ejecutar este proyecto, necesitas configurar tus propias API Keys:
+
+1. Crear el archivo .env en la raiz del proyecto.
+2. Agregar el API Key en el archivo:
+    API_KEY=...
+
+Nota: El archivo `.env` está en `.gitignore` y no se subirá al repositorio.
+
 ## Construcción y Ejecución
 
 Para construir y ejecutar la aplicación:

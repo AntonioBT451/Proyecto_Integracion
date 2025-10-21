@@ -24,6 +24,7 @@ public class ConsultorAPIs {
     private Libro libroSeleccionado;
     private RequestQueue solicitud;
     private double mejorSimilitud = 0.0;
+    private String apiKey = System.getenv("API_KEY");
 
     public interface LibroBusquedaCallback {
         void onLibroEncontrado(Libro libro);
@@ -52,7 +53,7 @@ public class ConsultorAPIs {
             return;
         }
 
-        String url = "https://www.googleapis.com/books/v1/volumes?q=" + Uri.encode(consulta) + "&printType=books&maxResults=10&key=AIzaSyDL4o-4r9eeDOcY2XjtuMQX74TpWaoOqVs";
+        String url = "https://www.googleapis.com/books/v1/volumes?q=" + Uri.encode(consulta) + "&printType=books&maxResults=10&key=" + apiKey;
         Log.d("GoogleBooks URL", url);
 
         JsonObjectRequest googleRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -196,7 +197,7 @@ public class ConsultorAPIs {
 
     // Primera busqueda en GoogleBooks, mediante código ISBN
     public void busquedaGoogleBooksISBN(String consulta, LibroBusquedaCallback callback) {
-        String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + Uri.encode(consulta) + "&projection=lite&key=AIzaSyDL4o-4r9eeDOcY2XjtuMQX74TpWaoOqVs";
+        String url = "https://www.googleapis.com/books/v1/volumes?q=" + Uri.encode(consulta) + "&printType=books&maxResults=10&key=" + apiKey;
         Log.d("GoogleBooks URL", url);
 
         JsonObjectRequest googleRequest = new JsonObjectRequest(Request.Method.GET, url, null,
